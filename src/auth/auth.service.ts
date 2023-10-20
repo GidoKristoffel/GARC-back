@@ -1,13 +1,13 @@
-import { Injectable, Logger, UnauthorizedException } from "@nestjs/common";
+import { ConflictException, Injectable, Logger, UnauthorizedException } from "@nestjs/common";
 import { UserService } from '@user/user.service';
 import { LoginDto, RegisterDto } from '@auth/dto';
-import { Tokens } from "@auth/interfaces";
-import { Token, User } from "@prisma/client";
-import { compareSync } from "bcrypt";
-import { JwtService } from "@nestjs/jwt";
-import { PrismaService } from "@prisma/prisma.service";
-import { v4 } from "uuid";
-import { add } from "date-fns";
+import { Tokens } from '@auth/interfaces';
+import { Token, User } from '@prisma/client';
+import { compareSync } from 'bcrypt';
+import { JwtService } from '@nestjs/jwt';
+import { PrismaService } from '@prisma/prisma.service';
+import { v4 } from 'uuid';
+import { add } from 'date-fns';
 
 @Injectable()
 export class AuthService {
@@ -19,8 +19,22 @@ export class AuthService {
   ) {}
 
   async register(dto: RegisterDto) {
-    this.userService.save(dto).catch((err) => {
+    const user: User = await this.userService
+      .findOne(dto.email)
+      .catch((err) => {
+        this.logger.error(err);
+        return null;
+      });
+
+    if (user) {
+      throw new ConflictException(
+        'A user with this email is already registered',
+      );
+    }
+
+    return this.userService.save(dto).catch((err) => {
       this.logger.error(err);
+      return null;
     });
   }
 
@@ -36,11 +50,13 @@ export class AuthService {
       throw new UnauthorizedException('Wrong login or password');
     }
 
-    const accessToken = this.jwtService.sign({
-      id: user.id,
-      email: user.email,
-      roles: user.roles,
-    });
+    const accessToken: string =
+      'Bearer ' +
+      this.jwtService.sign({
+        id: user.id,
+        email: user.email,
+        roles: user.roles,
+      });
 
     const refreshToken = await this.getRefreshToken(user.id);
     return { accessToken, refreshToken };
