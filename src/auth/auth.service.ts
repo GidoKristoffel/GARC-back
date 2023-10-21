@@ -8,6 +8,7 @@ import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '@prisma/prisma.service';
 import { v4 } from 'uuid';
 import { add } from 'date-fns';
+import { config } from "rxjs";
 
 @Injectable()
 export class AuthService {
@@ -50,6 +51,10 @@ export class AuthService {
       throw new UnauthorizedException('Wrong login or password');
     }
 
+    return this.generateTokens(user);
+  }
+
+  private async generateTokens(user: User): Promise<Tokens> {
     const accessToken: string =
       'Bearer ' +
       this.jwtService.sign({
@@ -70,5 +75,16 @@ export class AuthService {
         userId,
       },
     });
+  }
+
+  async refreshTokens(refreshToken: string): Promise<Tokens> {
+    const token = await this.prismaService.token.delete({
+      where: { token: refreshToken },
+    });
+    if (token) {
+      throw new UnauthorizedException();
+    }
+    const user = await this.userService.findOne(token.userId);
+    return this.generateTokens(user);
   }
 }
