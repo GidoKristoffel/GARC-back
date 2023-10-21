@@ -8,7 +8,6 @@ import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '@prisma/prisma.service';
 import { v4 } from 'uuid';
 import { add } from 'date-fns';
-import { config } from "rxjs";
 
 @Injectable()
 export class AuthService {
@@ -81,7 +80,7 @@ export class AuthService {
     const token = await this.prismaService.token.delete({
       where: { token: refreshToken },
     });
-    if (token) {
+    if (!token) {
       throw new UnauthorizedException();
     }
     const user = await this.userService.findOne(token.userId);

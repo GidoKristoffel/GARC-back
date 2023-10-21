@@ -4,14 +4,14 @@ import {
   Controller,
   Get, HttpStatus,
   Post, Res,
-  UnauthorizedException
-} from "@nestjs/common";
+  UnauthorizedException,
+} from '@nestjs/common';
 import { LoginDto, RegisterDto } from '@auth/dto';
 import { AuthService } from '@auth/auth.service';
 import { Tokens } from '@auth/interfaces';
 import { Response } from 'express';
 import { ConfigService } from '@nestjs/config';
-import { Cookies } from "@common/decorators";
+import { Cookies } from '@common/decorators';
 
 const REFRESH_TOKEN: string = 'refreshtoken';
 
