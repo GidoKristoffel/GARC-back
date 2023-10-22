@@ -7,7 +7,7 @@ import {
 import { UserService } from '@user/user.service';
 import { LoginDto, RegisterDto } from '@auth/dto';
 import { Tokens } from '@auth/interfaces';
-import { Token, User } from '@prisma/client';
+import { User } from '@prisma/client';
 import { compareSync } from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '@prisma/prisma.service';
@@ -71,7 +71,7 @@ export class AuthService {
     return { accessToken, refreshToken };
   }
 
-  private async getRefreshToken(userId: string, agent: string): Promise<Token> {
+  private async getRefreshToken(userId: string, agent: string) {
     const _token = await this.prismaService.token.findFirst({
       where: {
         userId,
