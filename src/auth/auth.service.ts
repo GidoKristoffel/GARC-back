@@ -108,4 +108,8 @@ export class AuthService {
     const user = await this.userService.findOne(token.userId);
     return this.generateTokens(user, agent);
   }
+
+  public deleteRefreshToken(token: string) {
+    return this.prismaService.token.delete({ where: { token } });
+  }
 }
