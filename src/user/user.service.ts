@@ -5,12 +5,15 @@ import { genSaltSync, hashSync } from 'bcrypt';
 import { JwtPayload } from '@auth/interfaces';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
+import { ConfigService } from '@nestjs/config';
+import { convertToSecondsUtil } from '@common/utils';
 
 @Injectable()
 export class UserService {
   constructor(
     private readonly prismaService: PrismaService,
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
+    private readonly configService: ConfigService,
   ) {}
 
   save(user: Partial<User>) {
@@ -42,7 +45,11 @@ export class UserService {
       if (!user) {
         return null;
       }
-      await this.cacheManager.set(idOrEmail, user);
+      await this.cacheManager.set(
+        idOrEmail,
+        user,
+        convertToSecondsUtil(this.configService.get('JWT_SECRET')),
+      );
       return user;
     }
     return user;
