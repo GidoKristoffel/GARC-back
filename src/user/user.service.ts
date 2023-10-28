@@ -27,7 +27,10 @@ export class UserService {
     });
   }
 
-  async findOne(idOrEmail: string) {
+  async findOne(idOrEmail: string, isReset: boolean = false) {
+    if (isReset) {
+      await this.cacheManager.del(idOrEmail);
+    }
     const user = await this.cacheManager.get<User>(idOrEmail);
     if (!user) {
       const user = await this.prismaService.user.findFirst({
@@ -48,17 +51,21 @@ export class UserService {
       await this.cacheManager.set(
         idOrEmail,
         user,
-        convertToSecondsUtil(this.configService.get('JWT_SECRET')),
+        convertToSecondsUtil(this.configService.get('JWT_EXP')),
       );
       return user;
     }
     return user;
   }
 
-  delete(id: string, user: JwtPayload) {
+  async delete(id: string, user: JwtPayload) {
     if (user.id !== id && !user.roles.includes(Role.ADMIN)) {
       throw new ForbiddenException();
     }
+    await Promise.all([
+      this.cacheManager.del(id),
+      this.cacheManager.del(user.email),
+    ]);
     return this.prismaService.user.delete({
       where: {
         id,
