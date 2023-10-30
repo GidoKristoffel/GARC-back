@@ -5,7 +5,7 @@ import {
   Controller,
   Get,
   HttpStatus,
-  Post, Req,
+  Post, Query, Req,
   Res,
   UnauthorizedException, UseGuards,
   UseInterceptors
@@ -113,7 +113,15 @@ export class AuthController {
 
   @UseGuards(GoogleGuard)
   @Get('google/callback')
-  googleAuthCallback(@Req() req: Request) {
-    return req.user;
+  googleAuthCallback(@Req() req: Request, @Res() res: Response) {
+    const token = req.user['accessToken'];
+    return res.redirect(
+      `http://localhost:3000/api/auth/success?token=${token}`,
+    );
+  }
+
+  @Get('success')
+  success(@Query('token') token: string) {
+    return { token };
   }
 }
