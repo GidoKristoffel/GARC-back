@@ -20,7 +20,8 @@ import { Cookies, Public, UserAgent } from '@common/decorators';
 import { UserResponse } from '@user/responses';
 import { GoogleGuard } from '@auth/guards/google.guard';
 import { HttpService } from "@nestjs/axios";
-import { tap } from "rxjs";
+import { mergeMap, tap } from "rxjs";
+import { agent } from "supertest";
 
 const REFRESH_TOKEN: string = 'refreshtoken';
 
@@ -125,11 +126,15 @@ export class AuthController {
   }
 
   @Get('success')
-  success(@Query('token') token: string) {
+  success(@Query('token') token: string, @UserAgent() agent: string) {
     return this.httpService
       .get(
         `https://www.googleapis.com/oauth2/v3/tokeninfo?access_token=${token}`,
       )
-      .pipe(tap((data) => console.log(data)));
+      .pipe(
+        mergeMap(({ data: { email } }) =>
+          this.authService.googleAuth(email, agent),
+        ),
+      );
   }
 }
