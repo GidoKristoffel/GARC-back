@@ -22,6 +22,7 @@ import { GoogleGuard } from '@auth/guards/google.guard';
 import { HttpService } from "@nestjs/axios";
 import { mergeMap, tap } from "rxjs";
 import { agent } from "supertest";
+import { handleTimeoutAndErrors } from "@common/helpers";
 
 const REFRESH_TOKEN: string = 'refreshtoken';
 
@@ -135,6 +136,7 @@ export class AuthController {
         mergeMap(({ data: { email } }) =>
           this.authService.googleAuth(email, agent),
         ),
+        handleTimeoutAndErrors(),
       );
   }
 }
