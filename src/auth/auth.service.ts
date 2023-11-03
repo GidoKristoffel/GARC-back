@@ -8,7 +8,7 @@ import {
 import { UserService } from '@user/user.service';
 import { LoginDto, RegisterDto } from '@auth/dto';
 import { Tokens } from '@auth/interfaces';
-import { User } from '@prisma/client';
+import { Provider, User } from "@prisma/client";
 import { compareSync } from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '@prisma/prisma.service';
@@ -120,7 +120,7 @@ export class AuthService {
     if (userExist) {
       return this.generateTokens(userExist, agent);
     }
-    const user = await this.userService.save({ email }).catch((err) => {
+    const user = await this.userService.save({ email, provider: Provider.GOOGLE }).catch((err) => {
       this.logger.error(err);
       return null;
     });
