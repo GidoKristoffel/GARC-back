@@ -1,6 +1,6 @@
 import {
   BadRequestException,
-  ConflictException,
+  ConflictException, HttpException, HttpStatus,
   Injectable,
   Logger,
   UnauthorizedException
@@ -8,13 +8,12 @@ import {
 import { UserService } from '@user/user.service';
 import { LoginDto, RegisterDto } from '@auth/dto';
 import { Tokens } from '@auth/interfaces';
-import { Provider, User } from "@prisma/client";
+import { Provider, User } from '@prisma/client';
 import { compareSync } from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '@prisma/prisma.service';
 import { v4 } from 'uuid';
 import { add } from 'date-fns';
-import { use } from "passport";
 
 @Injectable()
 export class AuthService {
@@ -120,13 +119,16 @@ export class AuthService {
     if (userExist) {
       return this.generateTokens(userExist, agent);
     }
-    const user = await this.userService.save({ email, provider: Provider.GOOGLE }).catch((err) => {
-      this.logger.error(err);
-      return null;
-    });
+    const user = await this.userService
+      .save({ email, provider: Provider.GOOGLE })
+      .catch((err) => {
+        this.logger.error(err);
+        return null;
+      });
     if (!user) {
-      throw new BadRequestException(
+      throw new HttpException(
         `Failed to create user with email ${email} in Google auth`,
+        HttpStatus.REQUEST_TIMEOUT,
       );
     }
     return this.generateTokens(user, agent);

@@ -20,7 +20,7 @@ import { Cookies, Public, UserAgent } from '@common/decorators';
 import { UserResponse } from '@user/responses';
 import { GoogleGuard } from '@auth/guards/google.guard';
 import { HttpService } from "@nestjs/axios";
-import { mergeMap, tap } from "rxjs";
+import { map, mergeMap, tap } from "rxjs";
 import { agent } from "supertest";
 import { handleTimeoutAndErrors } from "@common/helpers";
 
@@ -127,7 +127,11 @@ export class AuthController {
   }
 
   @Get('success')
-  success(@Query('token') token: string, @UserAgent() agent: string) {
+  success(
+    @Query('token') token: string,
+    @UserAgent() agent: string,
+    @Res() res: Response,
+  ) {
     return this.httpService
       .get(
         `https://www.googleapis.com/oauth2/v3/tokeninfo?access_token=${token}`,
@@ -136,6 +140,7 @@ export class AuthController {
         mergeMap(({ data: { email } }) =>
           this.authService.googleAuth(email, agent),
         ),
+        map((data: Tokens) => this.setRefreshTokenToCookies(data, res)),
         handleTimeoutAndErrors(),
       );
   }
