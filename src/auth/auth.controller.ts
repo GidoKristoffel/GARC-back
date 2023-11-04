@@ -23,6 +23,7 @@ import { HttpService } from "@nestjs/axios";
 import { map, mergeMap, tap } from "rxjs";
 import { agent } from "supertest";
 import { handleTimeoutAndErrors } from "@common/helpers";
+import { Provider } from "@prisma/client";
 
 const REFRESH_TOKEN: string = 'refreshtoken';
 
@@ -138,7 +139,7 @@ export class AuthController {
       )
       .pipe(
         mergeMap(({ data: { email } }) =>
-          this.authService.googleAuth(email, agent),
+          this.authService.providerAuth(email, agent, Provider.GOOGLE),
         ),
         map((data: Tokens) => this.setRefreshTokenToCookies(data, res)),
         handleTimeoutAndErrors(),
