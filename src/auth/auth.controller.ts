@@ -5,7 +5,9 @@ import {
   Controller,
   Get,
   HttpStatus,
-  Post, Query, Req,
+  Post,
+  Query,
+  Req,
   Res,
   UnauthorizedException,
   UseGuards,
@@ -16,14 +18,18 @@ import { AuthService } from '@auth/auth.service';
 import { Tokens } from '@auth/interfaces';
 import { Request, Response } from 'express';
 import { ConfigService } from '@nestjs/config';
-import { Cookies, Public, UserAgent } from '@common/decorators';
+import {
+  Cookies,
+  Public,
+  RegistrationDecryptedBody,
+  UserAgent,
+} from '@common/decorators';
 import { UserResponse } from '@user/responses';
 import { GoogleGuard } from '@auth/guards/google.guard';
-import { HttpService } from "@nestjs/axios";
-import { map, mergeMap, tap } from "rxjs";
-import { agent } from "supertest";
-import { handleTimeoutAndErrors } from "@common/helpers";
-import { Provider } from "@prisma/client";
+import { HttpService } from '@nestjs/axios';
+import { map, mergeMap } from 'rxjs';
+import { handleTimeoutAndErrors } from '@common/helpers';
+import { Provider } from '@prisma/client';
 
 const REFRESH_TOKEN: string = 'refreshtoken';
 
@@ -38,7 +44,10 @@ export class AuthController {
 
   @UseInterceptors(ClassSerializerInterceptor)
   @Post('registration')
-  async registration(@Body() dto: RegisterDto): Promise<UserResponse> {
+  async registration(
+    @RegistrationDecryptedBody() dto: RegisterDto,
+  ): Promise<UserResponse> {
+    console.log(dto);
     const user = await this.authService.register(dto);
     if (!user) {
       throw new BadRequestException(
@@ -69,6 +78,7 @@ export class AuthController {
     @Cookies(REFRESH_TOKEN) refreshToken: string,
     @Res() res: Response,
   ) {
+    console.log(refreshToken);
     if (!refreshToken) {
       res.sendStatus(HttpStatus.OK);
       return;

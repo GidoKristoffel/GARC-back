@@ -7,6 +7,7 @@ export class UserResponse implements User {
   @Exclude()
   password: string;
   @Exclude()
+  name: string;
   createdAt: Date;
   @Exclude()
   provider: Provider;

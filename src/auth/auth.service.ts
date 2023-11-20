@@ -1,10 +1,12 @@
 import {
   BadRequestException,
-  ConflictException, HttpException, HttpStatus,
+  ConflictException,
+  HttpException,
+  HttpStatus,
   Injectable,
   Logger,
-  UnauthorizedException
-} from "@nestjs/common";
+  UnauthorizedException,
+} from '@nestjs/common';
 import { UserService } from '@user/user.service';
 import { LoginDto, RegisterDto } from '@auth/dto';
 import { Tokens } from '@auth/interfaces';
