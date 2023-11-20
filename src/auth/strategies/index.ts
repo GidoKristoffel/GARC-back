@@ -1,4 +1,4 @@
 import { JwtStrategy } from '@auth/strategies/jwt.strategy';
-import { GoogleStrategy } from '@auth/strategies/google.startegy';
+// import { GoogleStrategy } from '@auth/strategies/google.startegy';
 
-export const STRATEGIES = [JwtStrategy, GoogleStrategy];
+export const STRATEGIES = [JwtStrategy];
