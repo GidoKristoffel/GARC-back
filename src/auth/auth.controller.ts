@@ -31,7 +31,7 @@ import { map, mergeMap } from 'rxjs';
 import { handleTimeoutAndErrors } from '@common/helpers';
 import { Provider } from '@prisma/client';
 
-const REFRESH_TOKEN: string = 'refreshtoken';
+const REFRESH_TOKEN: string = 'refresh_token';
 
 @Public()
 @Controller('auth')
@@ -62,7 +62,7 @@ export class AuthController {
     @Body() dto: LoginDto,
     @Res() res: Response,
     @UserAgent() agent: string,
-  ): Promise<{ accessToken: string }> {
+  ) {
     const tokens: Tokens = await this.authService.login(dto, agent);
     if (!tokens) {
       throw new BadRequestException(
@@ -70,7 +70,6 @@ export class AuthController {
       );
     }
     this.setRefreshTokenToCookies(tokens, res);
-    return tokens;
   }
 
   @Get('logout')
@@ -78,18 +77,11 @@ export class AuthController {
     @Cookies(REFRESH_TOKEN) refreshToken: string,
     @Res() res: Response,
   ) {
-    console.log(refreshToken);
-    if (!refreshToken) {
-      res.sendStatus(HttpStatus.OK);
-      return;
+    if (refreshToken) {
+      await this.authService.deleteRefreshToken(refreshToken);
+      res.clearCookie(REFRESH_TOKEN, { httpOnly: true, secure: true });
     }
-    await this.authService.deleteRefreshToken(refreshToken);
-    res.cookie(REFRESH_TOKEN, '', {
-      httpOnly: true,
-      secure: true,
-      expires: new Date(),
-    });
-    res.sendStatus(HttpStatus.OK);
+    return res.status(HttpStatus.OK).json({ status: HttpStatus.OK });
   }
 
   @Get('refresh')
