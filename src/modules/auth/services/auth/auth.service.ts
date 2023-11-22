@@ -7,13 +7,13 @@ import {
   Logger,
   UnauthorizedException,
 } from '@nestjs/common';
-import { UserService } from '@user/user.service';
-import { LoginDto, RegisterDto } from '@auth/dto';
-import { Tokens } from '@auth/interfaces';
+import { UserService } from '../../../user/services/user/user.service';
+import { LoginDto, RegisterDto } from '../../dto';
+import { Tokens } from '../../interfaces/auth.interface';
 import { Provider, User } from '@prisma/client';
 import { compareSync } from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
-import { PrismaService } from '@prisma/prisma.service';
+import { PrismaService } from '../../../prisma/prisma.service';
 import { v4 } from 'uuid';
 import { add } from 'date-fns';
 

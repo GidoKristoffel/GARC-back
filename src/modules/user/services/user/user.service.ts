@@ -1,8 +1,8 @@
 import { ForbiddenException, Inject, Injectable } from '@nestjs/common';
-import { PrismaService } from '@prisma/prisma.service';
+import { PrismaService } from '../../../prisma/prisma.service';
 import { Role, User } from '@prisma/client';
 import { genSaltSync, hashSync } from 'bcrypt';
-import { JwtPayload } from '@auth/interfaces';
+import { JwtPayload } from '../../../auth/interfaces/auth.interface';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 import { ConfigService } from '@nestjs/config';
@@ -41,11 +41,14 @@ export class UserService {
     return savedUser;
   }
 
-  async findOne(idOrEmail: string, isReset: boolean = false) {
+  async findOne(
+    idOrEmail: string,
+    isReset: boolean = false,
+  ): Promise<User> | null {
     if (isReset) {
       await this.cacheManager.del(idOrEmail);
     }
-    const user = await this.cacheManager.get<User>(idOrEmail);
+    const user: User = await this.cacheManager.get<User>(idOrEmail);
     if (!user) {
       const user = await this.prismaService.user.findFirst({
         where: {

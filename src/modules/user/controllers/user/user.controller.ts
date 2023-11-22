@@ -5,12 +5,13 @@ import {
   Get,
   Param,
   ParseUUIDPipe,
-  UseInterceptors
+  UseInterceptors,
 } from '@nestjs/common';
-import { UserService } from '@user/user.service';
-import { UserResponse } from '@user/responses';
+import { UserService } from '../../services/user/user.service';
+import { UserResponse } from '../../responses';
 import { CurrentUser } from '@common/decorators';
-import { JwtPayload } from '@auth/interfaces';
+import { JwtPayload } from '../../../auth/interfaces/auth.interface';
+import { User } from '@prisma/client';
 
 @Controller('user')
 export class UserController {
@@ -21,7 +22,7 @@ export class UserController {
   async findOneUser(
     @Param('idOrEmail') idOrEmail: string,
   ): Promise<UserResponse> {
-    const user = await this.userService.findOne(idOrEmail);
+    const user: User = await this.userService.findOne(idOrEmail);
     return new UserResponse(user);
   }
 
