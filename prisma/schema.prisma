@@ -11,15 +11,16 @@ datasource db {
 }
 
 model User {
-  id        String    @id @default(uuid())
-  email     String    @unique
-  username  String    @default("")
-  password  String?
-  provider  Provider?
-  createdAt DateTime  @default(now()) @map("created_at")
-  updatedAt DateTime  @updatedAt @map("updated_at")
-  roles     Role[]
-  Token     Token[]
+  id             String           @id @default(uuid())
+  email          String           @unique
+  username       String           @default("")
+  password       String?
+  provider       Provider?
+  createdAt      DateTime         @default(now()) @map("created_at")
+  updatedAt      DateTime         @updatedAt @map("updated_at")
+  roles          Role[]
+  Token          Token[]
+  UserCharacters UserCharacters[]
 
   @@map("users")
 }
@@ -34,6 +35,44 @@ model Token {
   @@map("tokens")
 }
 
+model Character {
+  id              String           @id @default(uuid())
+  nameEn          String           @default("")
+  nameUa          String           @default("")
+  nameRu          String           @default("")
+  quality         Quality
+  elementalType   Element
+  region          Region
+  bonusAttribute  BonusAttribute
+  weapon          Weapon
+  constellationEn String           @default("")
+  constellationUa String           @default("")
+  constellationRu String           @default("")
+  arche           Arche[]
+  birthday        DateTime
+  titleEn         String           @default("")
+  titleUa         String           @default("")
+  titleRu         String           @default("")
+  affiliationEn   String           @default("")
+  affiliationUa   String           @default("")
+  affiliationRu   String           @default("")
+  icon            String           @default("")
+  splashArt       String           @default("")
+  cardIcon        String           @default("")
+  UserCharacters  UserCharacters[]
+
+  @@map("characters")
+}
+
+model UserCharacters {
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String
+  character   Character @relation(fields: [characterId], references: [id], onDelete: Cascade)
+  characterId String
+
+  @@id([userId, characterId])
+}
+
 enum Role {
   ADMIN
   USER
@@ -41,4 +80,66 @@ enum Role {
 
 enum Provider {
   GOOGLE
+}
+
+enum Quality {
+  EPIC
+  LEGENDARY
+  OTHER
+}
+
+enum Element {
+  ANEMO
+  GEO
+  ELECTRO
+  DENDRO
+  HYDRO
+  PYRO
+  CRYO
+  OTHER
+}
+
+enum Region {
+  MONDSTADT
+  LIYUE
+  INAZUMA
+  SUMERU
+  FONTAINE
+  NATLAN
+  SNEZHNAYA
+  OTHER
+}
+
+enum BonusAttribute {
+  CRIT_DMG
+  ELEMENTAL_MASTERY
+  ENERGY_RECHARGE
+  CRIT_RATE
+  HP
+  HEALING_BONUS
+  PHYSICAL_DMG_BONUS
+  ATK
+  DEF
+  PYRO_DMG_BONUS
+  HYDRO_DMG_BONUS
+  DENDRO_DMG_BONUS
+  ELECTRO_DMG_BONUS
+  CRYO_DMG_BONUS
+  ANEMO_DMG_BONUS
+  GEO_DMG_BONUS
+  OTHER
+}
+
+enum Weapon {
+  SWORD
+  CLAYMORE
+  BOW
+  CATALYST
+  POLEARM
+  OTHER
+}
+
+enum Arche {
+  USIA
+  PNEUMA
 }
