@@ -13,9 +13,9 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { LoginDto, RegisterDto } from '@auth/dto';
-import { AuthService } from '@auth/auth.service';
-import { Tokens } from '@auth/interfaces';
+import { LoginDto, RegisterDto } from '../../dto';
+import { AuthService } from '../../services/auth/auth.service';
+import { Tokens } from '../../interfaces/auth.interface';
 import { Request, Response } from 'express';
 import { ConfigService } from '@nestjs/config';
 import {
@@ -24,8 +24,8 @@ import {
   RegistrationDecryptedBody,
   UserAgent,
 } from '@common/decorators';
-import { UserResponse } from '@user/responses';
-import { GoogleGuard } from '@auth/guards/google.guard';
+import { UserResponse } from '../../../user/responses';
+import { GoogleGuard } from '../../guards/google.guard';
 import { HttpService } from '@nestjs/axios';
 import { map, mergeMap } from 'rxjs';
 import { handleTimeoutAndErrors } from '@common/helpers';
@@ -47,7 +47,6 @@ export class AuthController {
   async registration(
     @RegistrationDecryptedBody() dto: RegisterDto,
   ): Promise<UserResponse> {
-    console.log(dto);
     const user = await this.authService.register(dto);
     if (!user) {
       throw new BadRequestException(

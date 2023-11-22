@@ -1,4 +1,4 @@
-import { RegisterDto } from '@auth/dto';
+import { RegisterDto } from '../../../../src/modules/auth/dto';
 import {
   ValidationArguments,
   ValidatorConstraint,

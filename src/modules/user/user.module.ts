@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { UserService } from './user.service';
-import { UserController } from './user.controller';
+import { UserService } from './services/user/user.service';
+import { UserController } from './controllers/user/user.controller';
 import { CacheModule } from '@nestjs/cache-manager';
 
 @Module({

@@ -1,5 +1,5 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
-import { RegisterDto } from '@auth/dto';
+import { RegisterDto } from '../../../../src/modules/auth/dto';
 
 export const  RegistrationDecryptedBody = createParamDecorator(
   (data: string, ctx: ExecutionContext) => {
