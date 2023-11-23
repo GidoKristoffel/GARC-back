@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../../prisma/prisma.service';
-import { Character } from '@prisma/client';
+import { Character, UserCharacters } from '@prisma/client';
 import { IDeletedCharacter } from '../../interfaces/common.interface';
 import { CharacterDto } from '../../dto';
+import { AvailableCharactersDto } from '../../dto/available-characters.dto';
 
 @Injectable()
 export class CharacterService {
@@ -80,6 +81,40 @@ export class CharacterService {
         icon: character.icon,
         splashArt: character.splashArt,
         cardIcon: character.cardIcon,
+      },
+    });
+  }
+
+  public async updateAvailableCharacters(
+    userId: string,
+    available: AvailableCharactersDto,
+  ): Promise<UserCharacters[]> {
+    const add: { userId: string; characterId: string }[] = available.add.map(
+      (characterId: string): { userId: string; characterId: string } => {
+        return {
+          userId,
+          characterId,
+        };
+      },
+    );
+    this.prismaService.userCharacters.createMany({
+      data: add,
+    });
+
+    available.remove.forEach((characterId: string): void => {
+      this.prismaService.userCharacters.delete({
+        where: {
+          userId_characterId: {
+            userId,
+            characterId,
+          },
+        },
+      });
+    });
+
+    return this.prismaService.userCharacters.findMany({
+      where: {
+        userId,
       },
     });
   }

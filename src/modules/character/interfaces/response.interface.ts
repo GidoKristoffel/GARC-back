@@ -1,5 +1,5 @@
 import { HttpStatus } from '@nestjs/common';
-import { Character } from '@prisma/client';
+import { Character, UserCharacters } from "@prisma/client";
 import { IDeletedCharacter } from './common.interface';
 
 export interface ICharacterResponse {
@@ -19,6 +19,11 @@ export interface ICreatedCharacterResponse {
 
 export interface IUpdatedCharacterResponse {
   character: Character | null;
+  status: HttpStatus.OK | HttpStatus.BAD_REQUEST;
+}
+
+export interface IAvailableCharacterResponse {
+  available: UserCharacters[];
   status: HttpStatus.OK | HttpStatus.BAD_REQUEST;
 }
 

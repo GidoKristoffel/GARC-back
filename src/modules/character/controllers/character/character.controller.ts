@@ -8,12 +8,14 @@ import {
   ParseUUIDPipe,
   Patch,
   Post,
+  Put,
   UseInterceptors,
 } from '@nestjs/common';
 import { CharacterService } from '../../services/character/character.service';
-import { Character } from '@prisma/client';
+import { Character, UserCharacters } from '@prisma/client';
 import {
   IAllCharactersResponse,
+  IAvailableCharacterResponse,
   ICharacterResponse,
   ICreatedCharacterResponse,
   IDeletedCharactersResponse,
@@ -21,6 +23,7 @@ import {
 } from '../../interfaces/response.interface';
 import { IDeletedCharacter } from '../../interfaces/common.interface';
 import { CharacterDto } from '../../dto';
+import { AvailableCharactersDto } from '../../dto/available-characters.dto';
 
 @Controller('character')
 export class CharacterController {
@@ -71,6 +74,20 @@ export class CharacterController {
     return {
       character,
       status: character ? HttpStatus.OK : HttpStatus.BAD_REQUEST,
+    };
+  }
+
+  @UseInterceptors(ClassSerializerInterceptor)
+  @Put('available/:id')
+  async updateAvailableCharacters(
+    @Param('id') id: string,
+    @Body() dto: AvailableCharactersDto,
+  ): Promise<IAvailableCharacterResponse> {
+    const available: UserCharacters[] =
+      await this.characterService.updateAvailableCharacters(id, dto);
+    return {
+      available,
+      status: available.length ? HttpStatus.OK : HttpStatus.BAD_REQUEST,
     };
   }
 
