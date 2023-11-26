@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Body,
   ClassSerializerInterceptor,
   Controller,
@@ -9,7 +8,6 @@ import {
   Query,
   Req,
   Res,
-  UnauthorizedException,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
@@ -17,7 +15,6 @@ import { LoginDto, RegisterDto } from '../../dto';
 import { AuthService } from '../../services/auth/auth.service';
 import { Tokens } from '../../interfaces/auth.interface';
 import { Request, Response } from 'express';
-import { ConfigService } from '@nestjs/config';
 import {
   Cookies,
   Public,
@@ -29,17 +26,20 @@ import { GoogleGuard } from '../../guards/google.guard';
 import { HttpService } from '@nestjs/axios';
 import { map, mergeMap } from 'rxjs';
 import { handleTimeoutAndErrors } from '@common/helpers';
-import { Provider } from '@prisma/client';
+import { Provider, User } from '@prisma/client';
+import { BadRequestExceptionService } from '../../services/bad-request-exception/bad-request-exception.service';
+import { TokenService } from '../../services/token/token.service';
 
 const REFRESH_TOKEN: string = 'refresh_token';
 
 @Public()
-@Controller('auth')
-export class AuthController {
+@Controller('user/auth')
+export class UserAuthController {
   constructor(
     private readonly authService: AuthService,
-    private readonly configService: ConfigService,
     private readonly httpService: HttpService,
+    private readonly badRequestExceptionService: BadRequestExceptionService,
+    private readonly tokenService: TokenService,
   ) {}
 
   @UseInterceptors(ClassSerializerInterceptor)
@@ -47,12 +47,8 @@ export class AuthController {
   async registration(
     @RegistrationDecryptedBody() dto: RegisterDto,
   ): Promise<UserResponse> {
-    const user = await this.authService.register(dto);
-    if (!user) {
-      throw new BadRequestException(
-        `Can't register user with data ${JSON.stringify(dto)}`,
-      );
-    }
+    const user: User = await this.authService.register(dto);
+    this.badRequestExceptionService.registrationException(user, dto);
     return new UserResponse(user);
   }
 
@@ -61,26 +57,19 @@ export class AuthController {
     @Body() dto: LoginDto,
     @Res() res: Response,
     @UserAgent() agent: string,
-  ) {
+  ): Promise<void> {
     const tokens: Tokens = await this.authService.login(dto, agent);
-    if (!tokens) {
-      throw new BadRequestException(
-        `Can't login with data ${JSON.stringify(dto)}`,
-      );
-    }
-    this.setRefreshTokenToCookies(tokens, res);
+    this.badRequestExceptionService.loginException(tokens, dto);
+    this.tokenService.setRefreshTokenToCookies(tokens, res);
   }
 
   @Get('logout')
   async logout(
     @Cookies(REFRESH_TOKEN) refreshToken: string,
     @Res() res: Response,
-  ) {
-    if (refreshToken) {
-      await this.authService.deleteRefreshToken(refreshToken);
-      res.clearCookie(REFRESH_TOKEN, { httpOnly: true, secure: true });
-    }
-    return res.status(HttpStatus.OK).json({ status: HttpStatus.OK });
+  ): Promise<void> {
+    await this.tokenService.deleteRefreshToken(refreshToken, res);
+    res.status(HttpStatus.OK).json({ status: HttpStatus.OK });
   }
 
   @Get('refresh')
@@ -88,31 +77,14 @@ export class AuthController {
     @Cookies(REFRESH_TOKEN) refreshToken: string,
     @Res() res: Response,
     @UserAgent() agent: string,
-  ) {
-    if (!refreshToken) {
-      throw new UnauthorizedException();
-    }
-    const tokens = await this.authService.refreshTokens(refreshToken, agent);
-    if (!tokens) {
-      throw new UnauthorizedException();
-    }
-    this.setRefreshTokenToCookies(tokens, res);
-  }
-
-  private setRefreshTokenToCookies(tokens: Tokens, res: Response) {
-    if (!tokens) {
-      throw new UnauthorizedException();
-    }
-    res.cookie(REFRESH_TOKEN, tokens.refreshToken.token, {
-      httpOnly: true,
-      sameSite: 'lax',
-      expires: new Date(tokens.refreshToken.exp),
-      secure:
-        this.configService.get('NODE_ENV', 'development') === 'production',
-      path: '/',
-    });
-
-    res.status(HttpStatus.CREATED).json({ accessToken: tokens.accessToken });
+  ): Promise<void> {
+    this.badRequestExceptionService.refreshException(refreshToken);
+    const tokens: Tokens = await this.authService.refreshTokens(
+      refreshToken,
+      agent,
+    );
+    this.badRequestExceptionService.refreshTokensException(tokens);
+    this.tokenService.setRefreshTokenToCookies(tokens, res);
   }
 
   @UseGuards(GoogleGuard)
@@ -142,7 +114,9 @@ export class AuthController {
         mergeMap(({ data: { email } }) =>
           this.authService.providerAuth(email, agent, Provider.GOOGLE),
         ),
-        map((data: Tokens) => this.setRefreshTokenToCookies(data, res)),
+        map((data: Tokens) =>
+          this.tokenService.setRefreshTokenToCookies(data, res),
+        ),
         handleTimeoutAndErrors(),
       );
   }
