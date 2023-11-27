@@ -16,7 +16,7 @@ export class UserService {
     private readonly configService: ConfigService,
   ) {}
 
-  async save(user: Partial<User>) {
+  async save(user: Partial<User>, role: Role) {
     const hashedPassword: string = this.hashPassword(user.password);
     const savedUser = await this.prismaService.user.upsert({
       where: {
@@ -25,13 +25,13 @@ export class UserService {
       update: {
         password: hashedPassword,
         provider: user?.provider,
-        roles: user?.roles,
+        roles: user ? (user.roles.includes(role) ? user.roles : [...user.roles, role]) : [],
         username: user?.username || '',
       },
       create: {
         email: user.email,
         password: hashedPassword,
-        roles: ['USER'],
+        roles: [role],
         provider: user?.provider,
         username: user?.username || '',
       },
@@ -43,6 +43,7 @@ export class UserService {
 
   async findOne(
     idOrEmail: string,
+    role: Role,
     isReset: boolean = false,
   ): Promise<User> | null {
     if (isReset) {
@@ -52,14 +53,10 @@ export class UserService {
     if (!user) {
       const user = await this.prismaService.user.findFirst({
         where: {
-          OR: [
-            {
-              id: idOrEmail,
-            },
-            {
-              email: idOrEmail,
-            },
-          ],
+          OR: [{ id: idOrEmail }, { email: idOrEmail }],
+          roles: {
+            hasSome: [role],
+          },
         },
       });
       if (!user) {

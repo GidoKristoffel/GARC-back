@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   ConflictException,
   HttpException,
   HttpStatus,
@@ -10,55 +9,64 @@ import {
 import { UserService } from '../../../user/services/user/user.service';
 import { LoginDto, RegisterDto } from '../../dto';
 import { Tokens } from '../../interfaces/auth.interface';
-import { Provider, User } from '@prisma/client';
+import { Provider, Role, User } from '@prisma/client';
 import { compareSync } from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../../../prisma/prisma.service';
 import { v4 } from 'uuid';
 import { add } from 'date-fns';
+import { SuperUserService } from "../super-user/super-user.service";
 
 @Injectable()
 export class AuthService {
-  private readonly logger = new Logger(AuthService.name);
+  private readonly logger: Logger = new Logger(AuthService.name);
   constructor(
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
     private readonly prismaService: PrismaService,
+    private readonly superUserService: SuperUserService,
   ) {}
 
-  async register(dto: RegisterDto) {
+  async register(dto: RegisterDto, role: Role): Promise<any> {
     const user: User = await this.userService
-      .findOne(dto.email)
-      .catch((err) => {
+      .findOne(dto.email, role)
+      .catch((err): null => {
         this.logger.error(err);
         return null;
       });
 
     if (user) {
       throw new ConflictException(
-        'A user with this email is already registered',
+        `A ${
+          role === Role.USER ? 'user' : 'admin'
+        } with this email is already registered`,
       );
     }
 
-    return this.userService.save(dto).catch((err) => {
+    return this.userService.save(dto, role).catch((err) => {
       this.logger.error(err);
       return null;
     });
   }
 
-  async login(dto: LoginDto, agent: string): Promise<Tokens> {
-    const user: User = await this.userService
-      .findOne(dto.email, true)
-      .catch((err) => {
-        this.logger.error(err);
-        return null;
-      });
+  async login(dto: LoginDto, role: Role, agent: string): Promise<Tokens> {
+    if (this.superUserService.isSuperUser(dto.email, dto.password)) {
+      const user: User = this.superUserService.getSuperUser();
+      return this.generateTokens(user, agent);
+    } else {
+      const user: User = await this.userService
+        .findOne(dto.email, role, true)
+        .catch((err): null => {
+          this.logger.error(err);
+          return null;
+        });
 
-    if (!user || !compareSync(dto.password, user.password)) {
-      throw new UnauthorizedException('Wrong login or password');
+      if (!user || !compareSync(dto.password, user.password)) {
+        throw new UnauthorizedException('Wrong login or password');
+      }
+
+      return this.generateTokens(user, agent);
     }
-
-    return this.generateTokens(user, agent);
   }
 
   private async generateTokens(user: User, agent: string): Promise<Tokens> {
@@ -97,7 +105,11 @@ export class AuthService {
     });
   }
 
-  async refreshTokens(refreshToken: string, agent: string): Promise<Tokens> {
+  async refreshTokens(
+    refreshToken: string,
+    role: Role,
+    agent: string,
+  ): Promise<Tokens> {
     const token = await this.prismaService.token.findUnique({
       where: { token: refreshToken },
     });
@@ -108,22 +120,23 @@ export class AuthService {
     if (new Date(token.exp) < new Date()) {
       throw new UnauthorizedException();
     }
-    const user = await this.userService.findOne(token.userId);
+    const user = await this.userService.findOne(token.userId, role);
     return this.generateTokens(user, agent);
   }
 
-  public deleteRefreshToken(token: string) {
-    return this.prismaService.token.delete({ where: { token } });
-  }
-
-  public async providerAuth(email: string, agent: string, provider: Provider) {
-    const userExist = await this.userService.findOne(email);
+  public async providerAuth(
+    email: string,
+    role: Role,
+    agent: string,
+    provider: Provider,
+  ): Promise<Tokens> {
+    const userExist = await this.userService.findOne(email, role);
     if (userExist) {
       return this.generateTokens(userExist, agent);
     }
     const user = await this.userService
-      .save({ email, provider: provider })
-      .catch((err) => {
+      .save({ email, provider: provider }, role)
+      .catch((err): null => {
         this.logger.error(err);
         return null;
       });

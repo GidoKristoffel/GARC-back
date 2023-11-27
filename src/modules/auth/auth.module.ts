@@ -10,6 +10,7 @@ import { GUARDS } from './guards';
 import { HttpModule } from '@nestjs/axios';
 import { BadRequestExceptionService } from './services/bad-request-exception/bad-request-exception.service';
 import { TokenService } from './services/token/token.service';
+import { SuperUserService } from './services/super-user/super-user.service';
 
 @Module({
   controllers: [UserAuthController],
@@ -19,6 +20,7 @@ import { TokenService } from './services/token/token.service';
     ...GUARDS,
     BadRequestExceptionService,
     TokenService,
+    SuperUserService,
   ],
   imports: [
     PassportModule,

@@ -11,7 +11,7 @@ import { UserService } from '../../services/user/user.service';
 import { UserResponse } from '../../responses';
 import { CurrentUser } from '@common/decorators';
 import { JwtPayload } from '../../../auth/interfaces/auth.interface';
-import { User } from '@prisma/client';
+import { Role, User } from "@prisma/client";
 
 @Controller('user')
 export class UserController {
@@ -22,7 +22,7 @@ export class UserController {
   async findOneUser(
     @Param('idOrEmail') idOrEmail: string,
   ): Promise<UserResponse> {
-    const user: User = await this.userService.findOne(idOrEmail);
+    const user: User = await this.userService.findOne(idOrEmail, Role.USER);
     return new UserResponse(user);
   }
 

@@ -4,6 +4,7 @@ import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtPayload } from '../interfaces/auth.interface';
 import { UserService } from '../../user/services/user/user.service';
+import { Role } from '@prisma/client';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -20,11 +21,13 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(payload: JwtPayload): Promise<JwtPayload> {
-    const user = await this.userService.findOne(payload.id).catch((err) => {
-      this.logger.error(err);
-      return null;
-    });
+  async validate(payload: JwtPayload, role: Role): Promise<JwtPayload> {
+    const user = await this.userService
+      .findOne(payload.id, role)
+      .catch((err) => {
+        this.logger.error(err);
+        return null;
+      });
     if (!user) {
       throw new UnauthorizedException();
     }
