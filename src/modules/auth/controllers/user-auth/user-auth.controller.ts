@@ -26,7 +26,7 @@ import { GoogleGuard } from '../../guards/google.guard';
 import { HttpService } from '@nestjs/axios';
 import { map, mergeMap } from 'rxjs';
 import { handleTimeoutAndErrors } from '@common/helpers';
-import { Provider, User } from '@prisma/client';
+import { Provider, Role, User } from '@prisma/client';
 import { BadRequestExceptionService } from '../../services/bad-request-exception/bad-request-exception.service';
 import { TokenService } from '../../services/token/token.service';
 
@@ -47,7 +47,7 @@ export class UserAuthController {
   async registration(
     @RegistrationDecryptedBody() dto: RegisterDto,
   ): Promise<UserResponse> {
-    const user: User = await this.authService.register(dto);
+    const user: User = await this.authService.register(dto, Role.USER);
     this.badRequestExceptionService.registrationException(user, dto);
     return new UserResponse(user);
   }
@@ -58,7 +58,7 @@ export class UserAuthController {
     @Res() res: Response,
     @UserAgent() agent: string,
   ): Promise<void> {
-    const tokens: Tokens = await this.authService.login(dto, agent);
+    const tokens: Tokens = await this.authService.login(dto, Role.USER, agent);
     this.badRequestExceptionService.loginException(tokens, dto);
     this.tokenService.setRefreshTokenToCookies(tokens, res);
   }
@@ -81,6 +81,7 @@ export class UserAuthController {
     this.badRequestExceptionService.refreshException(refreshToken);
     const tokens: Tokens = await this.authService.refreshTokens(
       refreshToken,
+      Role.USER,
       agent,
     );
     this.badRequestExceptionService.refreshTokensException(tokens);
@@ -112,7 +113,12 @@ export class UserAuthController {
       )
       .pipe(
         mergeMap(({ data: { email } }) =>
-          this.authService.providerAuth(email, agent, Provider.GOOGLE),
+          this.authService.providerAuth(
+            email,
+            Role.USER,
+            agent,
+            Provider.GOOGLE,
+          ),
         ),
         map((data: Tokens) =>
           this.tokenService.setRefreshTokenToCookies(data, res),
