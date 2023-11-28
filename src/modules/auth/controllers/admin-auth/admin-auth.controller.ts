@@ -1,7 +1,7 @@
 import { Body, Controller, Get, HttpStatus, Post, Res } from '@nestjs/common';
 import { LoginDto } from '../../dto';
 import { Response } from 'express';
-import { Cookies, UserAgent } from '@common/decorators';
+import { Cookies, Public, UserAgent } from '@common/decorators';
 import { Tokens } from '../../interfaces/auth.interface';
 import { AuthService } from '../../services/auth/auth.service';
 import { BadRequestExceptionService } from '../../services/bad-request-exception/bad-request-exception.service';
@@ -10,7 +10,8 @@ import { Role } from '@prisma/client';
 
 const REFRESH_TOKEN: string = 'refresh_token';
 
-@Controller('admin-auth')
+@Public()
+@Controller('admin/auth')
 export class AdminAuthController {
   constructor(
     private readonly authService: AuthService,
@@ -34,7 +35,10 @@ export class AdminAuthController {
     @Cookies(REFRESH_TOKEN) refreshToken: string,
     @Res() res: Response,
   ): Promise<void> {
-    await this.tokenService.deleteRefreshToken(refreshToken, res);
-    res.status(HttpStatus.OK).json({ status: HttpStatus.OK });
+    await this.tokenService
+      .deleteRefreshToken(refreshToken, res)
+      .then((): void => {
+        res.status(HttpStatus.OK).json({ status: HttpStatus.OK });
+      });
   }
 }
