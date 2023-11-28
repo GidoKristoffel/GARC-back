@@ -14,7 +14,7 @@ import {
 import { LoginDto, RegisterDto } from '../../dto';
 import { AuthService } from '../../services/auth/auth.service';
 import { Tokens } from '../../interfaces/auth.interface';
-import { Request, Response } from 'express';
+import e, { Request, Response } from 'express';
 import {
   Cookies,
   Public,
@@ -57,19 +57,29 @@ export class UserAuthController {
     @Body() dto: LoginDto,
     @Res() res: Response,
     @UserAgent() agent: string,
-  ): Promise<void> {
+  ): Promise<Response> {
     const tokens: Tokens = await this.authService.login(dto, Role.USER, agent);
     this.badRequestExceptionService.loginException(tokens, dto);
-    this.tokenService.setRefreshTokenToCookies(tokens, res);
+    return this.tokenService.setRefreshTokenToCookies(tokens, res);
   }
 
   @Get('logout')
   async logout(
     @Cookies(REFRESH_TOKEN) refreshToken: string,
     @Res() res: Response,
-  ): Promise<void> {
-    await this.tokenService.deleteRefreshToken(refreshToken, res);
-    res.status(HttpStatus.OK).json({ status: HttpStatus.OK });
+  ): Promise<Response> {
+    return await this.tokenService
+      .deleteRefreshToken(refreshToken, res)
+      .then(() => {
+        console.log('Status: OK');
+        return res.status(HttpStatus.OK).json({ status: HttpStatus.OK });
+      })
+      .catch(() => {
+        console.log('Status: BAD_REQUEST');
+        return res
+          .status(HttpStatus.BAD_REQUEST)
+          .json({ status: HttpStatus.BAD_REQUEST });
+      });
   }
 
   @Get('refresh')
@@ -77,7 +87,7 @@ export class UserAuthController {
     @Cookies(REFRESH_TOKEN) refreshToken: string,
     @Res() res: Response,
     @UserAgent() agent: string,
-  ): Promise<void> {
+  ): Promise<Response> {
     this.badRequestExceptionService.refreshException(refreshToken);
     const tokens: Tokens = await this.authService.refreshTokens(
       refreshToken,
@@ -85,7 +95,7 @@ export class UserAuthController {
       agent,
     );
     this.badRequestExceptionService.refreshTokensException(tokens);
-    this.tokenService.setRefreshTokenToCookies(tokens, res);
+    return this.tokenService.setRefreshTokenToCookies(tokens, res);
   }
 
   @UseGuards(GoogleGuard)

@@ -25,7 +25,7 @@ export class UserService {
       update: {
         password: hashedPassword,
         provider: user?.provider,
-        roles: user ? (user.roles.includes(role) ? user.roles : [...user.roles, role]) : [],
+        roles: user && user.roles ? (user.roles.includes(role) ? user.roles : [...user.roles, role]) : [role],
         username: user?.username || '',
       },
       create: {

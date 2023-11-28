@@ -4,6 +4,7 @@ import { Response } from 'express';
 import { Tokens } from '../../interfaces/auth.interface';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../../../prisma/prisma.service';
+import * as process from "process";
 
 const REFRESH_TOKEN: string = 'refresh_token';
 
@@ -17,17 +18,18 @@ export class TokenService {
   public async deleteRefreshToken(
     refreshToken: string,
     res: Response,
-  ): Promise<void> {
+  ): Promise<Response | null> {
     if (refreshToken) {
-      this.prismaService.token
+      return this.prismaService.token
         .delete({ where: { token: refreshToken } })
-        .then((): void => {
-          res.clearCookie(REFRESH_TOKEN, { httpOnly: true, secure: true });
+        .then(() => {
+          return res.clearCookie(REFRESH_TOKEN, { httpOnly: true, secure: true });
         });
     }
+    return new Promise(null);
   }
 
-  public setRefreshTokenToCookies(tokens: Tokens, res: Response): void {
+  public setRefreshTokenToCookies(tokens: Tokens, res: Response): Response {
     if (!tokens) {
       throw new UnauthorizedException();
     }
@@ -40,6 +42,8 @@ export class TokenService {
       path: '/',
     });
 
-    res.status(HttpStatus.CREATED).json({ accessToken: tokens.accessToken });
+    return res
+      .status(HttpStatus.CREATED)
+      .json({ accessToken: tokens.accessToken });
   }
 }

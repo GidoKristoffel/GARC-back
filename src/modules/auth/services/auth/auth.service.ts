@@ -9,13 +9,13 @@ import {
 import { UserService } from '../../../user/services/user/user.service';
 import { LoginDto, RegisterDto } from '../../dto';
 import { Tokens } from '../../interfaces/auth.interface';
-import { Provider, Role, User } from '@prisma/client';
+import { Provider, Role, Token, User } from '@prisma/client';
 import { compareSync } from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../../../prisma/prisma.service';
 import { v4 } from 'uuid';
 import { add } from 'date-fns';
-import { SuperUserService } from "../super-user/super-user.service";
+import { SuperUserService } from '../../../../core/services/super-user/super-user.service';
 
 @Injectable()
 export class AuthService {
@@ -43,30 +43,25 @@ export class AuthService {
       );
     }
 
-    return this.userService.save(dto, role).catch((err) => {
+    return this.userService.save(dto, role).catch((err): null => {
       this.logger.error(err);
       return null;
     });
   }
 
   async login(dto: LoginDto, role: Role, agent: string): Promise<Tokens> {
-    if (this.superUserService.isSuperUser(dto.email, dto.password)) {
-      const user: User = this.superUserService.getSuperUser();
-      return this.generateTokens(user, agent);
-    } else {
-      const user: User = await this.userService
-        .findOne(dto.email, role, true)
-        .catch((err): null => {
-          this.logger.error(err);
-          return null;
-        });
+    const user: User = await this.userService
+      .findOne(dto.email, role, true)
+      .catch((err): null => {
+        this.logger.error(err);
+        return null;
+      });
 
-      if (!user || !compareSync(dto.password, user.password)) {
-        throw new UnauthorizedException('Wrong login or password');
-      }
-
-      return this.generateTokens(user, agent);
+    if (!user || !compareSync(dto.password, user.password)) {
+      throw new UnauthorizedException('Wrong login or password');
     }
+
+    return this.generateTokens(user, agent);
   }
 
   private async generateTokens(user: User, agent: string): Promise<Tokens> {
@@ -77,13 +72,14 @@ export class AuthService {
         email: user.email,
         roles: user.roles,
       });
+    console.log('accessToken: ', accessToken);
 
     const refreshToken = await this.getRefreshToken(user.id, agent);
     return { accessToken, refreshToken };
   }
 
   private async getRefreshToken(userId: string, agent: string) {
-    const _token = await this.prismaService.token.findFirst({
+    const _token: Token = await this.prismaService.token.findFirst({
       where: {
         userId,
         userAgent: agent,
