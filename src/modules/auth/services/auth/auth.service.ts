@@ -15,7 +15,6 @@ import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../../../prisma/prisma.service';
 import { v4 } from 'uuid';
 import { add } from 'date-fns';
-import { SuperUserService } from '../../../../core/services/super-user/super-user.service';
 
 @Injectable()
 export class AuthService {
@@ -24,7 +23,6 @@ export class AuthService {
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
     private readonly prismaService: PrismaService,
-    private readonly superUserService: SuperUserService,
   ) {}
 
   async register(dto: RegisterDto, role: Role): Promise<any> {

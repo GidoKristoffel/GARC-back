@@ -41,4 +41,20 @@ export class AdminAuthController {
         res.status(HttpStatus.OK).json({ status: HttpStatus.OK });
       });
   }
+
+  @Get('refresh')
+  async refreshTokens(
+    @Cookies(REFRESH_TOKEN) refreshToken: string,
+    @Res() res: Response,
+    @UserAgent() agent: string,
+  ): Promise<Response> {
+    this.badRequestExceptionService.refreshException(refreshToken);
+    const tokens: Tokens = await this.authService.refreshTokens(
+      refreshToken,
+      Role.ADMIN,
+      agent,
+    );
+    this.badRequestExceptionService.refreshTokensException(tokens);
+    return this.tokenService.setRefreshTokenToCookies(tokens, res);
+  }
 }
