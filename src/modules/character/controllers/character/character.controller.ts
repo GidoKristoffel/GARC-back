@@ -25,7 +25,7 @@ import { IDeletedCharacter } from '../../interfaces/common.interface';
 import { CharacterDto } from '../../dto';
 import { AvailableCharactersDto } from '../../dto/available-characters.dto';
 
-@Controller('character')
+@Controller('admin/character')
 export class CharacterController {
   constructor(private readonly characterService: CharacterService) {}
 
@@ -53,7 +53,7 @@ export class CharacterController {
   @Post()
   async createCharacter(
     @Body() dto: CharacterDto,
-  ): Promise<ICreatedCharacterResponse> {
+  ): Promise<ICreatedCharacterResponse | void> {
     const character: Character | null = await this.characterService.create(dto);
     return {
       character,

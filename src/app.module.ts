@@ -9,7 +9,8 @@ import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './modules/auth/guards/jwt-auth.guard';
 import { CacheModule } from '@nestjs/cache-manager';
 import { CoreModule } from './core/core.module';
-import { SuperUserService } from "./core/services/super-user/super-user.service";
+import { SuperUserService } from './core/services/super-user/super-user.service';
+import { CharacterModule } from './modules/character/character.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { SuperUserService } from "./core/services/super-user/super-user.service"
     ConfigModule.forRoot({ isGlobal: true }),
     CacheModule.register(),
     CoreModule,
+    CharacterModule,
   ],
   controllers: [AppController],
   providers: [
