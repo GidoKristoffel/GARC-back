@@ -1,12 +1,10 @@
-import {
-  Arche,
-  BonusAttribute,
-  Element,
-  Quality,
-  Region,
-  Weapon,
-} from '@prisma/client';
 import { IsString } from 'class-validator';
+import { EQuality } from '../enums/quality.enum';
+import { EElement } from '../enums/element.enum';
+import { ERegion } from '../enums/region.enum';
+import { EBonusAttribute } from '../enums/bonus-attribute.enum';
+import { EWeapon } from '../enums/weapon.enum';
+import { EArche } from '../enums/arche.enum';
 
 export class CharacterDto {
   name: {
@@ -14,17 +12,17 @@ export class CharacterDto {
     ua: string;
     ru: string;
   };
-  quality: Quality;
-  elementalType: Element;
-  region: Region;
-  bonusAttribute: BonusAttribute;
-  weapon: Weapon;
+  quality: EQuality;
+  elementalType: EElement;
+  region: ERegion;
+  bonusAttribute: EBonusAttribute;
+  weapon: EWeapon;
   constellation: {
     en: string;
     ua: string;
     ru: string;
   };
-  arche: Arche[];
+  arche: EArche[];
   birthday: Date;
   title: {
     en: string;

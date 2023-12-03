@@ -21,7 +21,10 @@ import {
   IDeletedCharactersResponse,
   IUpdatedCharacterResponse,
 } from '../../interfaces/response.interface';
-import { IDeletedCharacter } from '../../interfaces/common.interface';
+import {
+  ICharacter,
+  IDeletedCharacter,
+} from '../../interfaces/common.interface';
 import { CharacterDto } from '../../dto';
 import { AvailableCharactersDto } from '../../dto/available-characters.dto';
 
@@ -54,7 +57,8 @@ export class CharacterController {
   async createCharacter(
     @Body() dto: CharacterDto,
   ): Promise<ICreatedCharacterResponse | void> {
-    const character: Character | null = await this.characterService.create(dto);
+    const character: ICharacter | null =
+      await this.characterService.create(dto);
     return {
       character,
       status: character ? HttpStatus.CREATED : HttpStatus.BAD_REQUEST,
