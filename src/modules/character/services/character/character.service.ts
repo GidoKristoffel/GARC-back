@@ -1,13 +1,20 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../../prisma/prisma.service';
 import { Character, UserCharacters } from '@prisma/client';
-import { IDeletedCharacter } from '../../interfaces/common.interface';
+import {
+  ICharacter,
+  IDeletedCharacter,
+} from '../../interfaces/common.interface';
 import { CharacterDto } from '../../dto';
 import { AvailableCharactersDto } from '../../dto/available-characters.dto';
+import { TransformCharacterService } from '../transform-character/transform-character.service';
 
 @Injectable()
 export class CharacterService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly transformCharacterService: TransformCharacterService,
+  ) {}
 
   public async findOne(id: string): Promise<Character | null> {
     return this.prismaService.character.findFirst({
@@ -18,36 +25,24 @@ export class CharacterService {
   }
 
   public async findAll(): Promise<Character[] | null> {
-    return this.prismaService.character.findMany();
+    return this.prismaService.character
+      .findMany()
+      .then((characters) => {
+        return characters.map((character) =>
+          this.transformCharacterService.transformToResponseFormat(character),
+        );
+      })
+      .catch(() => null);
   }
 
-  public async create(character: CharacterDto): Promise<Character | null> {
-    return this.prismaService.character.create({
-      data: {
-        nameEn: character.name.en,
-        nameUa: character.name.ua,
-        nameRu: character.name.ru,
-        quality: character.quality,
-        elementalType: character.elementalType,
-        region: character.region,
-        bonusAttribute: character.bonusAttribute,
-        weapon: character.weapon,
-        constellationEn: character.constellation.en,
-        constellationUa: character.constellation.ua,
-        constellationRu: character.constellation.ru,
-        arche: character.arche,
-        birthday: character.birthday,
-        titleEn: character.title.en,
-        titleUa: character.title.ua,
-        titleRu: character.title.ru,
-        affiliationEn: character.affiliation.en,
-        affiliationUa: character.affiliation.ua,
-        affiliationRu: character.affiliation.ru,
-        icon: character.icon,
-        splashArt: character.splashArt,
-        cardIcon: character.cardIcon,
-      },
-    });
+  public async create(character: CharacterDto): Promise<ICharacter | null> {
+    const createdCharacter: Character =
+      await this.prismaService.character.create({
+        data: this.transformCharacterService.transformToDBFormat(character),
+      });
+    return this.transformCharacterService.transformToResponseFormat(
+      createdCharacter,
+    );
   }
 
   public async update(
@@ -58,30 +53,7 @@ export class CharacterService {
       where: {
         id,
       },
-      data: {
-        nameEn: character.name.en,
-        nameUa: character.name.ua,
-        nameRu: character.name.ru,
-        quality: character.quality,
-        elementalType: character.elementalType,
-        region: character.region,
-        bonusAttribute: character.bonusAttribute,
-        weapon: character.weapon,
-        constellationEn: character.constellation.en,
-        constellationUa: character.constellation.ua,
-        constellationRu: character.constellation.ru,
-        arche: character.arche,
-        birthday: character.birthday,
-        titleEn: character.title.en,
-        titleUa: character.title.ua,
-        titleRu: character.title.ru,
-        affiliationEn: character.affiliation.en,
-        affiliationUa: character.affiliation.ua,
-        affiliationRu: character.affiliation.ru,
-        icon: character.icon,
-        splashArt: character.splashArt,
-        cardIcon: character.cardIcon,
-      },
+      data: this.transformCharacterService.transformToDBFormat(character),
     });
   }
 
