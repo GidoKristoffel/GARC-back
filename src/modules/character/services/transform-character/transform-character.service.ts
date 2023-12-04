@@ -56,11 +56,13 @@ export class TransformCharacterService {
         ua: data.nameUa,
         ru: data.nameRu,
       },
-      quality: data.quality.toLowerCase() as EQuality,
-      elementalType: data.elementalType.toLowerCase() as EElement,
-      region: data.region.toLowerCase() as ERegion,
-      bonusAttribute: data.bonusAttribute.toLowerCase() as EBonusAttribute,
-      weapon: data.weapon.toLowerCase() as EWeapon,
+      quality: this.convertToKebabCase(data.quality) as EQuality,
+      elementalType: this.convertToKebabCase(data.elementalType) as EElement,
+      region: this.convertToKebabCase(data.region) as ERegion,
+      bonusAttribute: this.convertToKebabCase(
+        data.bonusAttribute,
+      ) as EBonusAttribute,
+      weapon: this.convertToKebabCase(data.weapon) as EWeapon,
       constellation: {
         en: data.constellationEn,
         ua: data.constellationUa,
@@ -82,5 +84,9 @@ export class TransformCharacterService {
       splashArt: data.splashArt,
       cardIcon: data.cardIcon,
     };
+  }
+
+  private convertToKebabCase(input: string): string {
+    return input.toLowerCase().replace(/_/g, '-');
   }
 }
