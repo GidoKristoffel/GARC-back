@@ -16,12 +16,17 @@ export class CharacterService {
     private readonly transformCharacterService: TransformCharacterService,
   ) {}
 
-  public async findOne(id: string): Promise<Character | null> {
-    return this.prismaService.character.findFirst({
-      where: {
-        id,
-      },
-    });
+  public async findOne(id: string): Promise<ICharacter | null> {
+    return this.prismaService.character
+      .findFirst({
+        where: {
+          id,
+        },
+      })
+      .then((character) =>
+        this.transformCharacterService.transformToResponseFormat(character),
+      )
+      .catch(() => null);
   }
 
   public async findAll(): Promise<Character[] | null> {
@@ -48,13 +53,22 @@ export class CharacterService {
   public async update(
     id: string,
     character: CharacterDto,
-  ): Promise<Character | null> {
-    return this.prismaService.character.update({
-      where: {
-        id,
-      },
-      data: this.transformCharacterService.transformToDBFormat(character),
-    });
+  ): Promise<ICharacter | null> {
+    const updatedCharacter: Character | null =
+      await this.prismaService.character.update({
+        where: {
+          id,
+        },
+        data: this.transformCharacterService.transformToDBFormat(character),
+      });
+
+    if (!updatedCharacter) {
+      return null;
+    }
+
+    return this.transformCharacterService.transformToResponseFormat(
+      updatedCharacter,
+    );
   }
 
   public async updateAvailableCharacters(
@@ -92,7 +106,7 @@ export class CharacterService {
   }
 
   public async delete(id: string): Promise<IDeletedCharacter> {
-    return this.prismaService.user.delete({
+    return this.prismaService.character.delete({
       where: {
         id,
       },
