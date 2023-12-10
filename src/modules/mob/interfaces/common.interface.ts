@@ -14,3 +14,17 @@ export interface IMob {
   };
   type: $Enums.MobType;
 }
+
+export interface IMobCreate {
+  nameEn: string;
+  nameUa: string;
+  nameRu: string;
+  descriptionEn: string;
+  descriptionUa: string;
+  descriptionRu: string;
+  type: $Enums.MobType;
+}
+
+export interface IDeletedMob {
+  id: string;
+}
