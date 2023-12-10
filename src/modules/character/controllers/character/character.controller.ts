@@ -2,6 +2,7 @@ import {
   Body,
   ClassSerializerInterceptor,
   Controller,
+  Delete,
   Get,
   HttpStatus,
   Param,
@@ -45,7 +46,8 @@ export class CharacterController {
   @UseInterceptors(ClassSerializerInterceptor)
   @Get(':id')
   async findOneCharacter(@Param('id') id: string): Promise<ICharacterResponse> {
-    const character: Character | null = await this.characterService.findOne(id);
+    const character: ICharacter | null =
+      await this.characterService.findOne(id);
     return {
       character,
       status: character ? HttpStatus.FOUND : HttpStatus.NOT_FOUND,
@@ -71,7 +73,7 @@ export class CharacterController {
     @Param('id') id: string,
     @Body() dto: CharacterDto,
   ): Promise<IUpdatedCharacterResponse> {
-    const character: Character | null = await this.characterService.update(
+    const character: ICharacter | null = await this.characterService.update(
       id,
       dto,
     );
@@ -96,7 +98,7 @@ export class CharacterController {
   }
 
   @UseInterceptors(ClassSerializerInterceptor)
-  @Get(':id')
+  @Delete(':id')
   async deleteCharacter(
     @Param('id', ParseUUIDPipe) id: string,
   ): Promise<IDeletedCharactersResponse> {

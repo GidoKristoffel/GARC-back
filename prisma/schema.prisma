@@ -73,6 +73,17 @@ model UserCharacters {
   @@id([userId, characterId])
 }
 
+model Mob {
+  id            String    @id @default(uuid())
+  nameEn        String    @default("")
+  nameUa        String    @default("")
+  nameRu        String    @default("")
+  descriptionEn String    @default("")
+  descriptionUa String    @default("")
+  descriptionRu String    @default("")
+  type          MobType
+}
+
 enum Role {
   ADMIN
   USER
@@ -142,4 +153,15 @@ enum Weapon {
 enum Arche {
   USIA
   PNEUMA
+}
+
+enum MobType {
+  OTHER_HUMAN_FACTIONS
+  AUTOMATONS
+  FATUI
+  ENEMIES_OF_NOTE
+  HILICHURLS
+  ELEMENTAL_LIFEFORMS
+  THE_ABYSS
+  MYSTICAL_BEASTS
 }

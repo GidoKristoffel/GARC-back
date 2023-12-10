@@ -11,6 +11,7 @@ import { CacheModule } from '@nestjs/cache-manager';
 import { CoreModule } from './core/core.module';
 import { SuperUserService } from './core/services/super-user/super-user.service';
 import { CharacterModule } from './modules/character/character.module';
+import { MobModule } from './modules/mob/mob.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { CharacterModule } from './modules/character/character.module';
     CacheModule.register(),
     CoreModule,
     CharacterModule,
+    MobModule,
   ],
   controllers: [AppController],
   providers: [
