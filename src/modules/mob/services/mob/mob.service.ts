@@ -25,7 +25,7 @@ export class MobService {
       .catch(() => null);
   }
 
-  public async findAll(): Promise<Character[] | null> {
+  public async findAll(): Promise<IMob[] | null> {
     return this.prismaService.mob
       .findMany()
       .then((mobs: Mob[]) => {

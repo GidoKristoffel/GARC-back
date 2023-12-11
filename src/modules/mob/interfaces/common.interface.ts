@@ -13,6 +13,7 @@ export interface IMob {
     ru: string;
   };
   type: $Enums.MobType;
+  icon: string;
 }
 
 export interface IMobCreate {
@@ -23,6 +24,7 @@ export interface IMobCreate {
   descriptionUa: string;
   descriptionRu: string;
   type: $Enums.MobType;
+  icon: string;
 }
 
 export interface IDeletedMob {
