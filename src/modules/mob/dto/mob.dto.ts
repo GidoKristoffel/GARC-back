@@ -12,4 +12,5 @@ export class MobDto {
     ru: string;
   };
   type: EMobType;
+  icon: string;
 }

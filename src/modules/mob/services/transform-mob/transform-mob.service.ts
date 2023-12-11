@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Mob } from '@prisma/client';
 import { IMob, IMobCreate } from '../../interfaces/common.interface';
 import { MobDto } from '../../dto';
-import { $Enums } from ".prisma/client";
+import { $Enums } from '.prisma/client';
 
 @Injectable()
 export class TransformMobService {
@@ -23,6 +23,7 @@ export class TransformMobService {
         ru: data.descriptionRu,
       },
       type: data.type,
+      icon: data.icon,
     };
   }
 
@@ -35,6 +36,7 @@ export class TransformMobService {
       descriptionUa: mob.description.en,
       descriptionRu: mob.description.en,
       type: mob.type.toUpperCase() as $Enums.MobType,
+      icon: mob.icon,
     };
   }
 }
