@@ -3,6 +3,7 @@ import { Mob } from '@prisma/client';
 import { IMob, IMobCreate } from '../../interfaces/common.interface';
 import { MobDto } from '../../dto';
 import { $Enums } from '.prisma/client';
+import { EMobType } from '../../enums/mob-type.enum';
 
 @Injectable()
 export class TransformMobService {
@@ -22,7 +23,7 @@ export class TransformMobService {
         ua: data.descriptionUa,
         ru: data.descriptionRu,
       },
-      type: data.type,
+      type: this.convertToKebabCase(data.type) as EMobType,
       icon: data.icon,
     };
   }
@@ -33,10 +34,14 @@ export class TransformMobService {
       nameUa: mob.name.ua,
       nameRu: mob.name.ru,
       descriptionEn: mob.description.en,
-      descriptionUa: mob.description.en,
-      descriptionRu: mob.description.en,
+      descriptionUa: mob.description.ua,
+      descriptionRu: mob.description.ru,
       type: mob.type.toUpperCase() as $Enums.MobType,
       icon: mob.icon,
     };
+  }
+
+  private convertToKebabCase(input: string): string {
+    return input.toLowerCase().replace(/_/g, '-');
   }
 }

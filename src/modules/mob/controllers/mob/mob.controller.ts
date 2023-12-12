@@ -19,7 +19,7 @@ import {
 import { IMob } from '../../interfaces/common.interface';
 import { MobDto } from '../../dto';
 
-@Controller('mob')
+@Controller('admin/mob')
 export class MobController {
   constructor(private mobService: MobService) {}
 

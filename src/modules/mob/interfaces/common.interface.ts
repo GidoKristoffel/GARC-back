@@ -1,4 +1,5 @@
 import { $Enums } from '.prisma/client';
+import { EMobType } from "../enums/mob-type.enum";
 
 export interface IMob {
   id: string;
@@ -12,7 +13,7 @@ export interface IMob {
     ua: string;
     ru: string;
   };
-  type: $Enums.MobType;
+  type: EMobType;
   icon: string;
 }
 
