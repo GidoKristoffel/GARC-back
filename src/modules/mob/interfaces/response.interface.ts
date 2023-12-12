@@ -1,4 +1,4 @@
-import { IMob } from './common.interface';
+import { IDeletedMob, IMob } from './common.interface';
 import { HttpStatus } from '@nestjs/common';
 
 export interface IAllMobsResponse {
@@ -18,5 +18,10 @@ export interface ICreatedMobResponse {
 
 export interface IUpdatedMobResponse {
   mob: IMob;
+  status: HttpStatus.OK | HttpStatus.BAD_REQUEST;
+}
+
+export interface IDeletedMobResponse {
+  mob: IDeletedMob | null;
   status: HttpStatus.OK | HttpStatus.BAD_REQUEST;
 }

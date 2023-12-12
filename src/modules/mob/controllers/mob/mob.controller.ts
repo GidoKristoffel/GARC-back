@@ -8,15 +8,18 @@ import {
   Post,
   Body,
   Patch,
+  Delete,
+  ParseUUIDPipe,
 } from '@nestjs/common';
 import { MobService } from '../../services/mob/mob.service';
 import {
   IAllMobsResponse,
   ICreatedMobResponse,
+  IDeletedMobResponse,
   IMobResponse,
   IUpdatedMobResponse,
 } from '../../interfaces/response.interface';
-import { IMob } from '../../interfaces/common.interface';
+import { IDeletedMob, IMob } from '../../interfaces/common.interface';
 import { MobDto } from '../../dto';
 
 @Controller('admin/mob')
@@ -60,6 +63,18 @@ export class MobController {
     @Body() dto: MobDto,
   ): Promise<IUpdatedMobResponse> {
     const mob: IMob | null = await this.mobService.update(id, dto);
+    return {
+      mob,
+      status: mob ? HttpStatus.OK : HttpStatus.BAD_REQUEST,
+    };
+  }
+
+  @UseInterceptors(ClassSerializerInterceptor)
+  @Delete(':id')
+  async deleteCharacter(
+    @Param('id', ParseUUIDPipe) id: string,
+  ): Promise<IDeletedMobResponse> {
+    const mob: IDeletedMob = await this.mobService.delete(id);
     return {
       mob,
       status: mob ? HttpStatus.OK : HttpStatus.BAD_REQUEST,

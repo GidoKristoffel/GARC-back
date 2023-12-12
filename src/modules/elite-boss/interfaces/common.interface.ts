@@ -1,7 +1,7 @@
 import { $Enums } from '.prisma/client';
-import { EMobType } from '../enums/mob-type.enum';
+import { EEnemyType } from '../../../core/enums/emeny-type.enum';
 
-export interface IMob {
+export interface IEliteBoss {
   id: string;
   name: {
     en: string;
@@ -13,11 +13,11 @@ export interface IMob {
     ua: string;
     ru: string;
   };
-  type: EMobType;
+  type: EEnemyType;
   icon: string;
 }
 
-export interface IMobCreate {
+export interface IEliteBossCreate {
   nameEn: string;
   nameUa: string;
   nameRu: string;
@@ -28,6 +28,6 @@ export interface IMobCreate {
   icon: string;
 }
 
-export interface IDeletedMob {
+export interface IDeletedEliteBoss {
   id: string;
 }

@@ -1,8 +1,5 @@
--- CreateEnum
-CREATE TYPE "EnemyType" AS ENUM ('OTHER_HUMAN_FACTIONS', 'AUTOMATONS', 'FATUI', 'ENEMIES_OF_NOTE', 'HILICHURLS', 'ELEMENTAL_LIFEFORMS', 'THE_ABYSS', 'MYSTICAL_BEASTS');
-
 -- CreateTable
-CREATE TABLE "Mob" (
+CREATE TABLE "EliteBoss" (
     "id" TEXT NOT NULL,
     "nameEn" TEXT NOT NULL DEFAULT '',
     "nameUa" TEXT NOT NULL DEFAULT '',
@@ -11,6 +8,7 @@ CREATE TABLE "Mob" (
     "descriptionUa" TEXT NOT NULL DEFAULT '',
     "descriptionRu" TEXT NOT NULL DEFAULT '',
     "type" "EnemyType" NOT NULL,
+    "icon" TEXT NOT NULL DEFAULT '',
 
-    CONSTRAINT "Mob_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "EliteBoss_pkey" PRIMARY KEY ("id")
 );

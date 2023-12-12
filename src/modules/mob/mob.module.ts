@@ -5,6 +5,6 @@ import { TransformMobService } from './services/transform-mob/transform-mob.serv
 
 @Module({
   controllers: [MobController],
-  providers: [MobService, TransformMobService]
+  providers: [MobService, TransformMobService],
 })
 export class MobModule {}

@@ -74,15 +74,27 @@ model UserCharacters {
 }
 
 model Mob {
-  id            String  @id @default(uuid())
-  nameEn        String  @default("")
-  nameUa        String  @default("")
-  nameRu        String  @default("")
-  descriptionEn String  @default("")
-  descriptionUa String  @default("")
-  descriptionRu String  @default("")
-  type          MobType
-  icon          String  @default("")
+  id            String    @id @default(uuid())
+  nameEn        String    @default("")
+  nameUa        String    @default("")
+  nameRu        String    @default("")
+  descriptionEn String    @default("")
+  descriptionUa String    @default("")
+  descriptionRu String    @default("")
+  type          EnemyType
+  icon          String    @default("")
+}
+
+model EliteBoss {
+  id            String    @id @default(uuid())
+  nameEn        String    @default("")
+  nameUa        String    @default("")
+  nameRu        String    @default("")
+  descriptionEn String    @default("")
+  descriptionUa String    @default("")
+  descriptionRu String    @default("")
+  type          EnemyType
+  icon          String    @default("")
 }
 
 enum Role {
@@ -156,7 +168,7 @@ enum Arche {
   PNEUMA
 }
 
-enum MobType {
+enum EnemyType {
   OTHER_HUMAN_FACTIONS
   AUTOMATONS
   FATUI
