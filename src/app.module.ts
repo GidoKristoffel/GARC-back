@@ -12,6 +12,7 @@ import { CoreModule } from './core/core.module';
 import { SuperUserService } from './core/services/super-user/super-user.service';
 import { CharacterModule } from './modules/character/character.module';
 import { MobModule } from './modules/mob/mob.module';
+import { EliteBossModule } from './modules/elite-boss/elite-boss.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { MobModule } from './modules/mob/mob.module';
     CoreModule,
     CharacterModule,
     MobModule,
+    EliteBossModule,
   ],
   controllers: [AppController],
   providers: [

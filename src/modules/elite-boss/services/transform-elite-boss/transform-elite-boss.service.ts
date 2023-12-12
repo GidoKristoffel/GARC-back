@@ -1,13 +1,17 @@
 import { Injectable } from '@nestjs/common';
-import { Mob } from '@prisma/client';
-import { IMob, IMobCreate } from '../../interfaces/common.interface';
-import { MobDto } from '../../dto';
+import { EliteBoss } from '@prisma/client';
+import { MobDto } from '../../../mob/dto';
 import { $Enums } from '.prisma/client';
-import { EMobType } from '../../enums/mob-type.enum';
+import {
+  IEliteBoss,
+  IEliteBossCreate,
+} from '../../interfaces/common.interface';
+import { EEnemyType } from '../../../../core/enums/emeny-type.enum';
+import { EliteBossDto } from '../../dto';
 
 @Injectable()
-export class TransformMobService {
-  public transformToResponseFormat(data: Mob): IMob | null {
+export class TransformEliteBossService {
+  public transformToResponseFormat(data: EliteBoss): IEliteBoss | null {
     if (!data) {
       return null;
     }
@@ -23,12 +27,12 @@ export class TransformMobService {
         ua: data.descriptionUa,
         ru: data.descriptionRu,
       },
-      type: this.convertToKebabCase(data.type) as EMobType,
+      type: this.convertToKebabCase(data.type) as EEnemyType,
       icon: data.icon,
     };
   }
 
-  public transformToDBFormat(mob: MobDto): IMobCreate {
+  public transformToDBFormat(mob: EliteBossDto): IEliteBossCreate {
     return {
       nameEn: mob.name.en,
       nameUa: mob.name.ua,

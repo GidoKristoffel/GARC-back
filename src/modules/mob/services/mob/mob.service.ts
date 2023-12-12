@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../../prisma/prisma.service';
 import { IDeletedMob, IMob } from '../../interfaces/common.interface';
 import { TransformMobService } from '../transform-mob/transform-mob.service';
-import { Character, Mob } from '@prisma/client';
+import { Mob } from '@prisma/client';
 import { MobDto } from '../../dto';
 
 @Injectable()
