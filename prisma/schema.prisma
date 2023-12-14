@@ -97,6 +97,18 @@ model EliteBoss {
   icon          String    @default("")
 }
 
+model WeeklyBoss {
+  id            String    @id @default(uuid())
+  nameEn        String    @default("")
+  nameUa        String    @default("")
+  nameRu        String    @default("")
+  descriptionEn String    @default("")
+  descriptionUa String    @default("")
+  descriptionRu String    @default("")
+  type          EnemyType
+  icon          String    @default("")
+}
+
 enum Role {
   ADMIN
   USER

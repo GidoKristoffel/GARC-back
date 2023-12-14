@@ -1,6 +1,5 @@
 import { HttpStatus } from '@nestjs/common';
-import { IDeletedEliteBoss, IEliteBoss } from "./common.interface";
-import { IDeletedCharacter } from "../../character/interfaces/common.interface";
+import { IDeletedEliteBoss, IEliteBoss } from './common.interface';
 
 export interface IAllEliteBossesResponse {
   eliteBosses: IEliteBoss[];
