@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { EliteBoss } from '@prisma/client';
-import { MobDto } from '../../../mob/dto';
 import { $Enums } from '.prisma/client';
 import {
   IEliteBoss,
