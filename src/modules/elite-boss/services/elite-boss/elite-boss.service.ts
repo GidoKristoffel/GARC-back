@@ -31,9 +31,9 @@ export class EliteBossService {
   public async findAll(): Promise<IEliteBoss[] | null> {
     return this.prismaService.eliteBoss
       .findMany()
-      .then((mobs: EliteBoss[]) => {
-        return mobs.map((mob: EliteBoss) =>
-          this.transformEliteBossService.transformToResponseFormat(mob),
+      .then((eliteBosses: EliteBoss[]) => {
+        return eliteBosses.map((eliteBoss: EliteBoss) =>
+          this.transformEliteBossService.transformToResponseFormat(eliteBoss),
         );
       })
       .catch(() => null);
@@ -53,7 +53,7 @@ export class EliteBossService {
     id: string,
     eliteBoss: EliteBossDto,
   ): Promise<IEliteBoss | null> {
-    const updatedMob: EliteBoss | null =
+    const updatedEliteBoss: EliteBoss | null =
       await this.prismaService.eliteBoss.update({
         where: {
           id,
@@ -61,11 +61,13 @@ export class EliteBossService {
         data: this.transformEliteBossService.transformToDBFormat(eliteBoss),
       });
 
-    if (!updatedMob) {
+    if (!updatedEliteBoss) {
       return null;
     }
 
-    return this.transformEliteBossService.transformToResponseFormat(updatedMob);
+    return this.transformEliteBossService.transformToResponseFormat(
+      updatedEliteBoss,
+    );
   }
 
   public async delete(id: string): Promise<IDeletedEliteBoss> {
