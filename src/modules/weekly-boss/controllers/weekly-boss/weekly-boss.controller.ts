@@ -25,7 +25,7 @@ import {
 } from '../../interfaces/common.interface';
 import { WeeklyBossDto } from '../../dto';
 
-@Controller('weekly-boss')
+@Controller('admin/weekly-boss')
 export class WeeklyBossController {
   constructor(private weeklyBossService: WeeklyBossService) {}
 
