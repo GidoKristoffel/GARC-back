@@ -14,6 +14,7 @@ import { CharacterModule } from './modules/character/character.module';
 import { MobModule } from './modules/mob/mob.module';
 import { EliteBossModule } from './modules/elite-boss/elite-boss.module';
 import { WeeklyBossModule } from './modules/weekly-boss/weekly-boss.module';
+import { TalentMaterialModule } from './modules/talent-material/talent-material.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { WeeklyBossModule } from './modules/weekly-boss/weekly-boss.module';
     MobModule,
     EliteBossModule,
     WeeklyBossModule,
+    TalentMaterialModule,
   ],
   controllers: [AppController],
   providers: [

@@ -73,6 +73,21 @@ model UserCharacters {
   @@id([userId, characterId])
 }
 
+model TalentMaterial {
+  id            String             @id @default(uuid())
+  nameEn        String             @default("")
+  nameUa        String             @default("")
+  nameRu        String             @default("")
+  descriptionEn String             @default("")
+  descriptionUa String             @default("")
+  descriptionRu String             @default("")
+  type          TalentMaterialType
+  rarity        MaterialRarity
+  region        Region
+  farmDays      Day[]
+  icon          String             @default("")
+}
+
 model Mob {
   id            String    @id @default(uuid())
   nameEn        String    @default("")
@@ -189,4 +204,25 @@ enum EnemyType {
   ELEMENTAL_LIFEFORMS
   THE_ABYSS
   MYSTICAL_BEASTS
+}
+
+enum MaterialRarity {
+  UNCOMMON
+  RARE
+  EPIC
+}
+
+enum TalentMaterialType {
+  BOOK
+  CROWN
+}
+
+enum Day {
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+  SATURDAY
+  SUNDAY
 }
