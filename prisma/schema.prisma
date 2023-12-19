@@ -73,6 +73,19 @@ model UserCharacters {
   @@id([userId, characterId])
 }
 
+model AscensionMaterial {
+  id            String             @id @default(uuid())
+  nameEn        String             @default("")
+  nameUa        String             @default("")
+  nameRu        String             @default("")
+  descriptionEn String             @default("")
+  descriptionUa String             @default("")
+  descriptionRu String             @default("")
+  type          AscensionMaterialType
+  rarity        MaterialRarity
+  icon          String             @default("")
+}
+
 model TalentMaterial {
   id            String             @id @default(uuid())
   nameEn        String             @default("")
@@ -210,6 +223,7 @@ enum MaterialRarity {
   UNCOMMON
   RARE
   EPIC
+  LEGENDARY
 }
 
 enum TalentMaterialType {
@@ -225,4 +239,8 @@ enum Day {
   FRIDAY
   SATURDAY
   SUNDAY
+}
+
+enum AscensionMaterialType {
+  GEMS_OF_EXALTATION
 }

@@ -51,7 +51,7 @@ export class TransformTalentMaterialService {
       descriptionRu: talentMaterial.description.ru,
       type: talentMaterial.type.toUpperCase() as $Enums.TalentMaterialType,
       rarity: talentMaterial.rarity.toUpperCase() as $Enums.MaterialRarity,
-      region: this.convertToKebabCase(talentMaterial.region) as $Enums.Region,
+      region: talentMaterial.region.toUpperCase() as $Enums.Region,
       farmDays: talentMaterial.farmDays.map((day: EDay) =>
         day.toUpperCase(),
       ) as $Enums.Day[],
