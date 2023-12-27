@@ -73,6 +73,19 @@ model UserCharacters {
   @@id([userId, characterId])
 }
 
+model LevelUpMaterial {
+  id            String             @id @default(uuid())
+  nameEn        String             @default("")
+  nameUa        String             @default("")
+  nameRu        String             @default("")
+  descriptionEn String             @default("")
+  descriptionUa String             @default("")
+  descriptionRu String             @default("")
+  type          LevelUpMaterialType
+  rarity        MaterialRarity
+  icon          String             @default("")
+}
+
 model AscensionMaterial {
   id            String             @id @default(uuid())
   nameEn        String             @default("")
@@ -243,4 +256,9 @@ enum Day {
 
 enum AscensionMaterialType {
   GEMS_OF_EXALTATION
+}
+
+enum LevelUpMaterialType {
+  REGULAR_BOSS_REWARDS
+  WEEKLY_BOSS_REWARDS
 }
