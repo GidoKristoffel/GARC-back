@@ -1,7 +1,7 @@
 import { EMaterialRarity } from '../../../core/enums/material-rarity.enum';
 import { ELevelUpMaterialType } from '../../../core/enums/level-up-material-type.enum';
 
-export class AscensionMaterialDto {
+export class LevelUpMaterialDto {
   name: {
     en: string;
     ua: string;
