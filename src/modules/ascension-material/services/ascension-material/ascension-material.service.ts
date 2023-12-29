@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../../prisma/prisma.service';
+import { TransformAscensionMaterialService } from '../transform-ascension-material/transform-ascension-material.service';
 import {
-	TransformAscensionMaterialService
-} from "../transform-ascension-material/transform-ascension-material.service";
-import { IAscensionMaterial, IDeletedAscensionMaterial } from "../../interfaces/common.interface";
-import { AscensionMaterial } from "@prisma/client";
-import { AscensionMaterialDto } from "../../dto";
+  IAscensionMaterial,
+  IDeletedAscensionMaterial,
+} from '../../interfaces/common.interface';
+import { AscensionMaterial } from '@prisma/client';
+import { AscensionMaterialDto } from '../../dto';
 
 @Injectable()
 export class AscensionMaterialService {
