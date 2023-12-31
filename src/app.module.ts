@@ -17,6 +17,7 @@ import { WeeklyBossModule } from './modules/weekly-boss/weekly-boss.module';
 import { TalentMaterialModule } from './modules/talent-material/talent-material.module';
 import { AscensionMaterialModule } from './modules/ascension-material/ascension-material.module';
 import { LevelUpMaterialModule } from './modules/level-up-material/level-up-material.module';
+import { WeaponMaterialModule } from './modules/weapon-material/weapon-material.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { LevelUpMaterialModule } from './modules/level-up-material/level-up-mate
     TalentMaterialModule,
     AscensionMaterialModule,
     LevelUpMaterialModule,
+    WeaponMaterialModule,
   ],
   controllers: [AppController],
   providers: [
