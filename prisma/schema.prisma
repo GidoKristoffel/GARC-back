@@ -114,6 +114,21 @@ model TalentMaterial {
   icon          String             @default("")
 }
 
+model WeaponMaterial {
+  id            String             @id @default(uuid())
+  nameEn        String             @default("")
+  nameUa        String             @default("")
+  nameRu        String             @default("")
+  descriptionEn String             @default("")
+  descriptionUa String             @default("")
+  descriptionRu String             @default("")
+  type          WeaponMaterialType
+  rarity        MaterialRarity
+  region        Region
+  farmDays      Day[]
+  icon          String             @default("")
+}
+
 model Mob {
   id            String    @id @default(uuid())
   nameEn        String    @default("")
@@ -261,4 +276,9 @@ enum AscensionMaterialType {
 enum LevelUpMaterialType {
   REGULAR_BOSS_REWARDS
   WEEKLY_BOSS_REWARDS
+}
+
+enum WeaponMaterialType {
+  ASCENSION
+  REFINEMENT
 }
