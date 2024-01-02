@@ -73,30 +73,42 @@ model UserCharacters {
   @@id([userId, characterId])
 }
 
+model EnhancementMaterial {
+  id            String                  @id @default(uuid())
+  nameEn        String                  @default("")
+  nameUa        String                  @default("")
+  descriptionEn String                  @default("")
+  descriptionUa String                  @default("")
+  descriptionRu String                  @default("")
+  type          EnhancementMaterialType
+  rarity        MaterialRarity
+  icon          String              @default("")
+}
+
 model LevelUpMaterial {
-  id            String             @id @default(uuid())
-  nameEn        String             @default("")
-  nameUa        String             @default("")
-  nameRu        String             @default("")
-  descriptionEn String             @default("")
-  descriptionUa String             @default("")
-  descriptionRu String             @default("")
+  id            String              @id @default(uuid())
+  nameEn        String              @default("")
+  nameUa        String              @default("")
+  nameRu        String              @default("")
+  descriptionEn String              @default("")
+  descriptionUa String              @default("")
+  descriptionRu String              @default("")
   type          LevelUpMaterialType
   rarity        MaterialRarity
-  icon          String             @default("")
+  icon          String              @default("")
 }
 
 model AscensionMaterial {
-  id            String             @id @default(uuid())
-  nameEn        String             @default("")
-  nameUa        String             @default("")
-  nameRu        String             @default("")
-  descriptionEn String             @default("")
-  descriptionUa String             @default("")
-  descriptionRu String             @default("")
+  id            String                @id @default(uuid())
+  nameEn        String                @default("")
+  nameUa        String                @default("")
+  nameRu        String                @default("")
+  descriptionEn String                @default("")
+  descriptionUa String                @default("")
+  descriptionRu String                @default("")
   type          AscensionMaterialType
   rarity        MaterialRarity
-  icon          String             @default("")
+  icon          String                @default("")
 }
 
 model TalentMaterial {
@@ -281,4 +293,9 @@ enum LevelUpMaterialType {
 enum WeaponMaterialType {
   ASCENSION
   REFINEMENT
+}
+
+enum EnhancementMaterialType {
+  GENERAL_DROPS
+  ELITE_DROPS
 }
