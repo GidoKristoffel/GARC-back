@@ -77,12 +77,13 @@ model EnhancementMaterial {
   id            String                  @id @default(uuid())
   nameEn        String                  @default("")
   nameUa        String                  @default("")
+  nameRu        String                  @default("")
   descriptionEn String                  @default("")
   descriptionUa String                  @default("")
   descriptionRu String                  @default("")
   type          EnhancementMaterialType
   rarity        MaterialRarity
-  icon          String              @default("")
+  icon          String                  @default("")
 }
 
 model LevelUpMaterial {
