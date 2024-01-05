@@ -18,7 +18,7 @@ export interface ICharacterCreate {
   elementalType: $Enums.Element;
   region: $Enums.Region;
   bonusAttribute: $Enums.BonusAttribute;
-  weapon: $Enums.Weapon;
+  weapon: $Enums.WeaponType;
   constellationEn: string;
   constellationUa: string;
   constellationRu: string;

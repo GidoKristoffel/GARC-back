@@ -19,6 +19,7 @@ import { AscensionMaterialModule } from './modules/ascension-material/ascension-
 import { LevelUpMaterialModule } from './modules/level-up-material/level-up-material.module';
 import { WeaponMaterialModule } from './modules/weapon-material/weapon-material.module';
 import { EnhancementMaterialModule } from './modules/enhancement-material/enhancement-material.module';
+import { WeaponModule } from './modules/weapon/weapon.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { EnhancementMaterialModule } from './modules/enhancement-material/enhanc
     LevelUpMaterialModule,
     WeaponMaterialModule,
     EnhancementMaterialModule,
+    WeaponModule,
   ],
   controllers: [AppController],
   providers: [
