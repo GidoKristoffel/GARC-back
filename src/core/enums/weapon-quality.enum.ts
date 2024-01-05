@@ -1,4 +1,4 @@
-export enum EMaterialRarity {
+export enum EWeaponQuality {
   COMMON = 'common',
   UNCOMMON = 'uncommon',
   RARE = 'rare',
