@@ -44,7 +44,7 @@ model Character {
   elementalType   Element
   region          Region
   bonusAttribute  BonusAttribute
-  weapon          Weapon
+  weapon          WeaponType
   constellationEn String           @default("")
   constellationUa String           @default("")
   constellationRu String           @default("")
@@ -62,6 +62,23 @@ model Character {
   UserCharacters  UserCharacters[]
 
   @@map("characters")
+}
+
+model Weapon {
+  id                   String               @id @default(uuid())
+  nameEn               String               @default("")
+  nameUa               String               @default("")
+  nameRu               String               @default("")
+  descriptionEn        String               @default("")
+  descriptionUa        String               @default("")
+  descriptionRu        String               @default("")
+  abilityDescriptionEn String               @default("")
+  abilityDescriptionUa String               @default("")
+  abilityDescriptionRu String               @default("")
+  type                 WeaponType
+  bonusAttribute       WeaponBonusAttribute
+  quality              WeaponQuality
+  region               Region
 }
 
 model UserCharacters {
@@ -235,7 +252,18 @@ enum BonusAttribute {
   OTHER
 }
 
-enum Weapon {
+enum WeaponBonusAttribute {
+  ATK
+  PHYSICAL_DMG_BONUS
+  DEF
+  CRIT_RATE
+  CRIT_DMG
+  ELEMENTAL_MASTERY
+  ENERGY_RECHARGE
+  HP
+}
+
+enum WeaponType {
   SWORD
   CLAYMORE
   BOW
@@ -260,7 +288,16 @@ enum EnemyType {
   MYSTICAL_BEASTS
 }
 
+enum WeaponQuality {
+  COMMON
+  UNCOMMON
+  RARE
+  EPIC
+  LEGENDARY
+}
+
 enum MaterialRarity {
+  COMMON
   UNCOMMON
   RARE
   EPIC
