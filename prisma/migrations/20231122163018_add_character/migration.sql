@@ -14,7 +14,7 @@ CREATE TYPE "BonusAttribute" AS ENUM ('CRIT_DMG', 'ELEMENTAL_MASTERY', 'ENERGY_R
 CREATE TYPE "Weapon" AS ENUM ('SWORD', 'CLAYMORE', 'BOW', 'CATALYST', 'POLEARM', 'OTHER');
 
 -- CreateEnum
-CREATE TYPE "Arche" AS ENUM ('USIA', 'PNEUMA');
+CREATE TYPE "Arche" AS ENUM ('OUSIA', 'PNEUMA');
 
 -- CreateTable
 CREATE TABLE "characters" (
