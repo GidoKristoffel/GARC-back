@@ -79,6 +79,11 @@ model Weapon {
   bonusAttribute       WeaponBonusAttribute
   quality              WeaponQuality
   region               Region
+  icon                 String               @default("")
+  splashArtOriginal    String               @default("")
+  splashArtAwakened    String               @default("")
+  splashArtPneuma      String               @default("")
+  splashArtOusia       String               @default("")
 }
 
 model UserCharacters {
@@ -273,7 +278,7 @@ enum WeaponType {
 }
 
 enum Arche {
-  USIA
+  OUSIA
   PNEUMA
 }
 

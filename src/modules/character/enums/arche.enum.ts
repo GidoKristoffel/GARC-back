@@ -1,4 +1,4 @@
 export enum EArche {
-  USIA = 'usia',
+  OUSIA = 'ousia',
   PNEUMA = 'pneuma',
 }
