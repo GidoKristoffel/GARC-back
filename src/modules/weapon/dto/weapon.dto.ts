@@ -23,4 +23,8 @@ export interface WeaponDto {
   bonusAttribute: EWeaponBonusAttribute;
   quality: EWeaponQuality;
   region: ERegion;
+  splashArtOriginal: string;
+  splashArtAwakened: string;
+  splashArtPneuma: string;
+  splashArtOusia: string;
 }

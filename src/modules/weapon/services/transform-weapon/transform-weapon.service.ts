@@ -39,6 +39,10 @@ export class TransformWeaponService {
       ) as EWeaponBonusAttribute,
       quality: this.convertToKebabCase(data.quality) as EWeaponQuality,
       region: this.convertToKebabCase(data.region) as ERegion,
+      splashArtOriginal: data.splashArtOriginal,
+      splashArtAwakened: data.splashArtAwakened,
+      splashArtPneuma: data.splashArtPneuma,
+      splashArtOusia: data.splashArtOusia,
     };
   }
 
@@ -58,6 +62,10 @@ export class TransformWeaponService {
         weapon.bonusAttribute.toUpperCase() as $Enums.WeaponBonusAttribute,
       quality: weapon.quality.toUpperCase() as $Enums.WeaponQuality,
       region: weapon.region.toUpperCase() as $Enums.Region,
+      splashArtOriginal: weapon.splashArtOriginal,
+      splashArtAwakened: weapon.splashArtAwakened,
+      splashArtPneuma: weapon.splashArtPneuma,
+      splashArtOusia: weapon.splashArtOusia,
     };
   }
 

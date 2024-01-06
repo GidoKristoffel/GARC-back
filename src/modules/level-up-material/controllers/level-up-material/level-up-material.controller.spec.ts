@@ -9,7 +9,9 @@ describe('LevelUpMaterialController', () => {
       controllers: [LevelUpMaterialController],
     }).compile();
 
-    controller = module.get<LevelUpMaterialController>(LevelUpMaterialController);
+    controller = module.get<LevelUpMaterialController>(
+      LevelUpMaterialController,
+    );
   });
 
   it('should be defined', () => {
