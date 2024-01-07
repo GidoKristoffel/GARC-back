@@ -22,6 +22,10 @@ export interface IWeaponCreate {
   bonusAttribute: $Enums.WeaponBonusAttribute;
   quality: $Enums.WeaponQuality;
   region: $Enums.Region;
+  splashArtOriginal: string;
+  splashArtAwakened: string;
+  splashArtPneuma: string;
+  splashArtOusia: string;
 }
 
 export interface IWeapon {
@@ -45,4 +49,8 @@ export interface IWeapon {
   bonusAttribute: EWeaponBonusAttribute;
   quality: EWeaponQuality;
   region: ERegion;
+  splashArtOriginal: string;
+  splashArtAwakened: string;
+  splashArtPneuma: string;
+  splashArtOusia: string;
 }
