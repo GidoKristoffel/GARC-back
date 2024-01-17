@@ -96,16 +96,19 @@ model UserCharacters {
 }
 
 model EnhancementMaterial {
-  id            String                  @id @default(uuid())
-  nameEn        String                  @default("")
-  nameUa        String                  @default("")
-  nameRu        String                  @default("")
-  descriptionEn String                  @default("")
-  descriptionUa String                  @default("")
-  descriptionRu String                  @default("")
-  type          EnhancementMaterialType
-  rarity        MaterialRarity
-  icon          String                  @default("")
+  id                     String                   @id @default(uuid())
+  nameEn                 String                   @default("")
+  nameUa                 String                   @default("")
+  nameRu                 String                   @default("")
+  descriptionEn          String                   @default("")
+  descriptionUa          String                   @default("")
+  descriptionRu          String                   @default("")
+  type                   EnhancementMaterialType
+  rarity                 MaterialRarity
+  icon                   String                   @default("")
+  EnhancementMaterialMob EnhancementMaterialMob[]
+
+  @@map("enhancementMaterials")
 }
 
 model LevelUpMaterial {
@@ -165,15 +168,18 @@ model WeaponMaterial {
 }
 
 model Mob {
-  id            String    @id @default(uuid())
-  nameEn        String    @default("")
-  nameUa        String    @default("")
-  nameRu        String    @default("")
-  descriptionEn String    @default("")
-  descriptionUa String    @default("")
-  descriptionRu String    @default("")
-  type          EnemyType
-  icon          String    @default("")
+  id                     String                   @id @default(uuid())
+  nameEn                 String                   @default("")
+  nameUa                 String                   @default("")
+  nameRu                 String                   @default("")
+  descriptionEn          String                   @default("")
+  descriptionUa          String                   @default("")
+  descriptionRu          String                   @default("")
+  type                   EnemyType
+  icon                   String                   @default("")
+  EnhancementMaterialMob EnhancementMaterialMob[]
+
+  @@map("mobs")
 }
 
 model EliteBoss {
@@ -198,6 +204,15 @@ model WeeklyBoss {
   descriptionRu String    @default("")
   type          EnemyType
   icon          String    @default("")
+}
+
+model EnhancementMaterialMob {
+  enhancementMaterial   EnhancementMaterial @relation(fields: [enhancementMaterialId], references: [id], onDelete: Cascade)
+  enhancementMaterialId String
+  mob                   Mob                 @relation(fields: [mobId], references: [id], onDelete: Cascade)
+  mobId                 String
+
+  @@id([enhancementMaterialId, mobId])
 }
 
 enum Role {
