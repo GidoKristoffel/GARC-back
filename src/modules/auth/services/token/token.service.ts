@@ -1,10 +1,8 @@
 import { HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
-import { AuthService } from '../auth/auth.service';
 import { Response } from 'express';
 import { Tokens } from '../../interfaces/auth.interface';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../../../prisma/prisma.service';
-import * as process from "process";
 
 const REFRESH_TOKEN: string = 'refresh_token';
 
@@ -23,7 +21,10 @@ export class TokenService {
       return this.prismaService.token
         .delete({ where: { token: refreshToken } })
         .then(() => {
-          return res.clearCookie(REFRESH_TOKEN, { httpOnly: true, secure: true });
+          return res.clearCookie(REFRESH_TOKEN, {
+            httpOnly: true,
+            secure: true,
+          });
         });
     }
     return new Promise(null);

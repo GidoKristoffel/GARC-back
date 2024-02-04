@@ -25,7 +25,7 @@ export class TransformCharacterService {
       region: character.region.toUpperCase() as $Enums.Region,
       bonusAttribute:
         character.bonusAttribute.toUpperCase() as $Enums.BonusAttribute,
-      weapon: character.weapon.toUpperCase() as $Enums.Weapon,
+      weapon: character.weapon.toUpperCase() as $Enums.WeaponType,
       constellationEn: character.constellation.en,
       constellationUa: character.constellation.ua,
       constellationRu: character.constellation.ru,

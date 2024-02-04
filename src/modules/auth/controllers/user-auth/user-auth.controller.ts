@@ -14,7 +14,7 @@ import {
 import { LoginDto, RegisterDto } from '../../dto';
 import { AuthService } from '../../services/auth/auth.service';
 import { Tokens } from '../../interfaces/auth.interface';
-import e, { Request, Response } from 'express';
+import { Request, Response } from 'express';
 import {
   Cookies,
   Public,
