@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../../../prisma/prisma.service';
 import { Character, UserCharacters } from '@prisma/client';
 import {
   ICharacter,
@@ -8,6 +7,7 @@ import {
 import { CharacterDto } from '../../dto';
 import { AvailableCharactersDto } from '../../dto/available-characters.dto';
 import { TransformCharacterService } from '../transform-character/transform-character.service';
+import { PrismaService } from '../../../../shared/prisma/prisma.service';
 
 @Injectable()
 export class CharacterService {

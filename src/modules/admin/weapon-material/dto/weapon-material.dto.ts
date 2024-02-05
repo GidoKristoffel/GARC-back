@@ -1,7 +1,7 @@
 import { EWeaponMaterialType } from '../../../../core/enums/weapon-material-type.enum';
 import { EMaterialRarity } from '../../../../core/enums/material-rarity.enum';
-import { ERegion } from '../../../character/enums/region.enum';
 import { EDay } from '../../../../core/enums/day.enum';
+import { ERegion } from '../../character/enums/region.enum';
 
 export class WeaponMaterialDto {
   name: {

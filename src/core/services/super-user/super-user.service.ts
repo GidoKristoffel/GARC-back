@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Role, User } from '@prisma/client';
 import { UserService } from '../../../modules/shared/user/services/user/user.service';
-import { RegisterDto } from '../../../modules/auth/dto';
+import { RegisterDto } from '../../../modules/shared/auth/dto';
 
 @Injectable()
 export class SuperUserService {

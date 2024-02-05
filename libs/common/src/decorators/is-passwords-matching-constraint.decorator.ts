@@ -1,9 +1,9 @@
-import { RegisterDto } from '../../../../src/modules/auth/dto';
 import {
   ValidationArguments,
   ValidatorConstraint,
   ValidatorConstraintInterface,
 } from 'class-validator';
+import { RegisterDto } from '../../../../src/modules/shared/auth/dto';
 
 @ValidatorConstraint({ name: 'IsPasswordsMatching', async: false })
 export class IsPasswordsMatchingConstraint

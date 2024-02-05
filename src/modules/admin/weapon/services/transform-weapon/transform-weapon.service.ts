@@ -1,14 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { EMaterialRarity } from '../../../../../core/enums/material-rarity.enum';
 import { $Enums } from '.prisma/client';
 import { Weapon } from '@prisma/client';
 import { IWeapon, IWeaponCreate } from '../../interfaces/common.interface';
 import { EWeaponType } from '../../../../../core/enums/weapon-type.enum';
-import { EBonusAttribute } from '../../../../character/enums/bonus-attribute.enum';
 import { EWeaponBonusAttribute } from '../../../../../core/enums/weapon-bonus-attribute.enum';
 import { EWeaponQuality } from '../../../../../core/enums/weapon-quality.enum';
-import { ERegion } from '../../../../character/enums/region.enum';
 import { WeaponDto } from '../../dto';
+import { ERegion } from '../../../character/enums/region.enum';
 
 @Injectable()
 export class TransformWeaponService {

@@ -1,5 +1,5 @@
-import { EEnemyType } from '../../../core/enums/emeny-type.enum';
 import { $Enums } from '.prisma/client';
+import { EEnemyType } from '../../../../core/enums/emeny-type.enum';
 
 export interface IWeeklyBoss {
   id: string;

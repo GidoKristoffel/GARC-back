@@ -2,7 +2,7 @@ import { $Enums } from '.prisma/client';
 import { EWeaponType } from '../../../../core/enums/weapon-type.enum';
 import { EWeaponBonusAttribute } from '../../../../core/enums/weapon-bonus-attribute.enum';
 import { EWeaponQuality } from '../../../../core/enums/weapon-quality.enum';
-import { ERegion } from '../../../character/enums/region.enum';
+import { ERegion } from '../../character/enums/region.enum';
 
 export interface IDeletedWeapon {
   id: string;
