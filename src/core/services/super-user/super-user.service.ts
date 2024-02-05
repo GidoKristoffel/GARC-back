@@ -17,6 +17,11 @@ export class SuperUserService {
   constructor(private readonly userService: UserService) {}
 
   public async init(): Promise<void> {
+    await this.initAdmin();
+    await this.initClient();
+  }
+
+  private async initAdmin(): Promise<void> {
     const user: User | null = await this.userService.findOne(
       this.email,
       Role.ADMIN,
@@ -25,6 +30,18 @@ export class SuperUserService {
 
     if (!user) {
       await this.userService.save(this.dto, Role.ADMIN);
+    }
+  }
+
+  private async initClient(): Promise<void> {
+    const user: User | null = await this.userService.findOne(
+      this.email,
+      Role.USER,
+      true,
+    );
+
+    if (!user) {
+      await this.userService.save(this.dto, Role.USER);
     }
   }
 }
