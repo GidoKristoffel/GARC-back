@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../../../prisma/prisma.service';
 import { WeeklyBoss } from '@prisma/client';
 import { TransformWeeklyBossService } from '../transform-weekly-boss/transform-weekly-boss/transform-weekly-boss.service';
 import {
@@ -7,6 +6,7 @@ import {
   IWeeklyBoss,
 } from '../../interfaces/common.interface';
 import { WeeklyBossDto } from '../../dto';
+import { PrismaService } from '../../../../shared/prisma/prisma.service';
 
 @Injectable()
 export class WeeklyBossService {

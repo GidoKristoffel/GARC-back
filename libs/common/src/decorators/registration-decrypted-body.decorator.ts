@@ -1,7 +1,7 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
-import { RegisterDto } from '../../../../src/modules/auth/dto';
+import { RegisterDto } from '../../../../src/modules/shared/auth/dto';
 
-export const  RegistrationDecryptedBody = createParamDecorator(
+export const RegistrationDecryptedBody = createParamDecorator(
   (data: string, ctx: ExecutionContext) => {
     const request = ctx.switchToHttp().getRequest();
     const body: RegisterDto = {

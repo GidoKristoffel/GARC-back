@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { EEnemyType } from '../../../../../core/enums/emeny-type.enum';
 import { $Enums } from '.prisma/client';
 import { WeeklyBoss } from '@prisma/client';
 import {
@@ -7,6 +6,7 @@ import {
   IWeeklyBossCreate,
 } from '../../../interfaces/common.interface';
 import { WeeklyBossDto } from '../../../dto';
+import { EEnemyType } from '../../../../../../core/enums/emeny-type.enum';
 
 @Injectable()
 export class TransformWeeklyBossService {
