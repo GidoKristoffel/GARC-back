@@ -20,6 +20,7 @@ import { MobModule } from './modules/admin/mob/mob.module';
 import { WeeklyBossModule } from './modules/admin/weekly-boss/weekly-boss.module';
 import { AuthModule } from './modules/shared/auth/auth.module';
 import { JwtAuthGuard } from './modules/shared/auth/guards/jwt-auth.guard';
+import { AvailableCharactersModule } from './modules/client/available-characters/available-characters.module';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { JwtAuthGuard } from './modules/shared/auth/guards/jwt-auth.guard';
     WeaponMaterialModule,
     EnhancementMaterialModule,
     WeaponModule,
+    AvailableCharactersModule,
   ],
   controllers: [AppController],
   providers: [
