@@ -8,6 +8,6 @@ export interface IAvailableCharacterCreate {
   characterId: string;
 }
 
-export interface IDeletedAvailableCharacter {
-  id: string;
+export interface IDeletedAvailableCharacters {
+  ids: string[];
 }
