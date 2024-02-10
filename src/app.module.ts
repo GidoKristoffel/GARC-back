@@ -21,6 +21,7 @@ import { WeeklyBossModule } from './modules/admin/weekly-boss/weekly-boss.module
 import { AuthModule } from './modules/shared/auth/auth.module';
 import { JwtAuthGuard } from './modules/shared/auth/guards/jwt-auth.guard';
 import { AvailableCharactersModule } from './modules/client/available-characters/available-characters.module';
+import { DataAutocompleteModule } from './modules/admin/data-autocomplete/data-autocomplete.module';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { AvailableCharactersModule } from './modules/client/available-characters
     EnhancementMaterialModule,
     WeaponModule,
     AvailableCharactersModule,
+    DataAutocompleteModule,
   ],
   controllers: [AppController],
   providers: [
