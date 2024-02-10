@@ -18,7 +18,7 @@ export class SuperUserService {
 
   public async init(): Promise<void> {
     await this.initAdmin();
-    await this.initClient();
+    // await this.initClient();
   }
 
   private async initAdmin(): Promise<void> {

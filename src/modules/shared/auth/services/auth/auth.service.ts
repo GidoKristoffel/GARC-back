@@ -55,6 +55,11 @@ export class AuthService {
         return null;
       });
 
+    console.log('dto: ', dto);
+    console.log('role: ', role);
+
+    console.log('user: ', user);
+
     if (!user || !compareSync(dto.password, user.password)) {
       throw new UnauthorizedException('Wrong login or password');
     }

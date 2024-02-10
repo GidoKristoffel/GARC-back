@@ -1,4 +1,5 @@
 import {
+  Body,
   ClassSerializerInterceptor,
   Controller,
   Get,
@@ -6,6 +7,7 @@ import {
 } from '@nestjs/common';
 import { IAvailableCharacter } from '../../interfaces/common.interface';
 import { AvailableCharactersService } from '../../services/available-characters/available-characters.service';
+import { AvailableCharactersDto } from '../../dto';
 
 @Controller('available-characters')
 export class AvailableCharactersController {
@@ -19,7 +21,13 @@ export class AvailableCharactersController {
 
   @UseInterceptors(ClassSerializerInterceptor)
   @Get()
-  async updateAvailableCharacters(): Promise<void> {
-		// return this.availableCharactersService.update()
+  async updateAvailableCharacters(
+    @Body() dto: AvailableCharactersDto,
+  ): Promise<void> {
+    return await this.availableCharactersService.update(
+      dto.userId,
+      dto.charactersToAdd,
+      dto.charactersToRemove,
+    );
   }
 }
