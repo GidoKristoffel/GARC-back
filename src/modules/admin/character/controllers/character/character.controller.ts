@@ -28,10 +28,15 @@ import {
 } from '../../interfaces/common.interface';
 import { CharacterDto } from '../../dto';
 import { AvailableCharactersDto } from '../../dto/available-characters.dto';
+import { CharacterAutocompleteService } from '../../services/character-autocomplete/character-autocomplete.service';
+import { Page } from "@gonetone/hoyowiki-api/dist/interfaces/EntryPageDataNpcAPIInterface";
 
 @Controller('admin/character')
 export class CharacterController {
-  constructor(private readonly characterService: CharacterService) {}
+  constructor(
+    private readonly characterService: CharacterService,
+    private readonly characterAutocompleteService: CharacterAutocompleteService,
+  ) {}
 
   @UseInterceptors(ClassSerializerInterceptor)
   @Get()
@@ -107,5 +112,11 @@ export class CharacterController {
       character,
       status: character ? HttpStatus.OK : HttpStatus.BAD_REQUEST,
     };
+  }
+
+  @UseInterceptors(ClassSerializerInterceptor)
+  @Get(':id')
+  async getDataForAutocomplete(@Param('id') id: string): Promise<Page> {
+    return this.characterAutocompleteService.get(id);
   }
 }
