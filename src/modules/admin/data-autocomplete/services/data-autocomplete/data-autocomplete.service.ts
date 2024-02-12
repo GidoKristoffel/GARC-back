@@ -1,8 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { Entry, Language, setLanguage } from '@gonetone/hoyowiki-api';
 import {
-  type Page as NpcPage,
-} from '@gonetone/hoyowiki-api/dist/interfaces/EntryPageDataNpcAPIInterface';
+  Component,
+  Module,
+  Page,
+  type Page as NpcPage
+} from "@gonetone/hoyowiki-api/dist/interfaces/EntryPageDataNpcAPIInterface";
 import { ICharacterCreate } from '../../../character/interfaces/common.interface';
 import { $Enums } from '.prisma/client';
 import type { Page as CharacterPage } from '@gonetone/hoyowiki-api/dist/interfaces/EntryPageDataCharacterAPIInterface';
@@ -13,6 +16,7 @@ import type { Page as MaterialPage } from '@gonetone/hoyowiki-api/dist/interface
 import type { Page as AnimalPage } from '@gonetone/hoyowiki-api/dist/interfaces/EntryPageDataAnimalAPIInterface';
 import type { Page as BookPage } from '@gonetone/hoyowiki-api/dist/interfaces/EntryPageDataBookAPIInterface';
 import type { Page as TutorialPage } from '@gonetone/hoyowiki-api/dist/interfaces/EntryPageDataTutorialAPIInterface';
+import * as cheerio from "cheerio";
 
 export type TEntry =
   | CharacterPage
@@ -49,9 +53,9 @@ export class DataAutocompleteService {
       region: $Enums.Region.FONTAINE,
       bonusAttribute: $Enums.BonusAttribute.ANEMO_DMG_BONUS,
       weapon: $Enums.WeaponType.SWORD,
-      constellationEn: '',
+      constellationEn: this.extractConstellationHtml(pageEn, 'Constellation'),
       constellationUa: '',
-      constellationRu: '',
+      constellationRu: this.extractConstellationHtml(pageRu, 'Созвездие:'),
       arche: [],
       birthday: new Date(),
       titleEn: '',
@@ -64,5 +68,26 @@ export class DataAutocompleteService {
       splashArt: '',
       cardIcon: '',
     };
+  }
+
+
+  private extractConstellationHtml(characters: TEntry, key: string): string {
+    const attributesModule: Module | undefined = characters.modules.find(
+      (module) => module.id === '1',
+    );
+    const baseInfoComponent: Component | undefined =
+      attributesModule?.components.find(
+        (component) => component.component_id === 'baseInfo',
+      );
+    const constellationData: string | undefined = baseInfoComponent?.data;
+    const value: string | undefined = JSON.parse(
+      constellationData || '',
+    ).list.find((item) => item.key === key)?.value[0];
+    return this.extractTextFromHtml(value || '');
+  }
+
+  private extractTextFromHtml(html: string): string {
+    const $ = cheerio.load(html);
+    return $('p').text().trim();
   }
 }

@@ -4,7 +4,7 @@ import {
   Module,
   Page,
 } from '@gonetone/hoyowiki-api/dist/interfaces/EntryPageDataNpcAPIInterface';
-import { Entry } from '@gonetone/hoyowiki-api';
+import { Entry, Language, setLanguage } from "@gonetone/hoyowiki-api";
 import * as cheerio from 'cheerio';
 
 @Injectable()
@@ -12,17 +12,23 @@ export class CharacterAutocompleteService {
   private readonly entryApi: Entry = new Entry();
 
   public async get(id: string): Promise<any> {
+    await setLanguage(Language.Russian);
     const character: Promise<any> = this.entryApi
       .get(+id)
       .then((characters: Page) => {
-        return this.extractConstellationHtml(characters, 'Constellation');
+        // return JSON.parse(characters.modules.find(
+        //   (module) => module.id === '1',
+        // ).components.find(
+        //   (component) => component.component_id === 'baseInfo',
+        // ).data);
+        return this.extractConstellationHtml(characters, 'Созвездие:');
       });
     return await character;
   }
 
   private extractConstellationHtml(characters: Page, key: string): string {
     const attributesModule: Module | undefined = characters.modules.find(
-      (module) => module.name === 'Attributes',
+      (module) => module.id === '1',
     );
     const baseInfoComponent: Component | undefined =
       attributesModule?.components.find(
