@@ -4,6 +4,6 @@ import { DataAutocompleteController } from './controllers/data-autocomplete/data
 
 @Module({
   providers: [DataAutocompleteService],
-  controllers: [DataAutocompleteController]
+  controllers: [DataAutocompleteController],
 })
 export class DataAutocompleteModule {}
