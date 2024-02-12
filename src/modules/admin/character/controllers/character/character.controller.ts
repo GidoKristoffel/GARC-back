@@ -29,7 +29,7 @@ import {
 import { CharacterDto } from '../../dto';
 import { AvailableCharactersDto } from '../../dto/available-characters.dto';
 import { CharacterAutocompleteService } from '../../services/character-autocomplete/character-autocomplete.service';
-import { Page } from "@gonetone/hoyowiki-api/dist/interfaces/EntryPageDataNpcAPIInterface";
+import { Page } from '@gonetone/hoyowiki-api/dist/interfaces/EntryPageDataNpcAPIInterface';
 
 @Controller('admin/character')
 export class CharacterController {
@@ -115,8 +115,8 @@ export class CharacterController {
   }
 
   @UseInterceptors(ClassSerializerInterceptor)
-  @Get(':id')
-  async getDataForAutocomplete(@Param('id') id: string): Promise<Page> {
+  @Get('data-autocomplete/:id')
+  async getDataForAutocomplete(@Param('id') id: string): Promise<any> {
     return this.characterAutocompleteService.get(id);
   }
 }

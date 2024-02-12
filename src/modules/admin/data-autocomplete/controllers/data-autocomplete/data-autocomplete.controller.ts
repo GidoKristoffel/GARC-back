@@ -1,12 +1,6 @@
-import {
-  ClassSerializerInterceptor,
-  Controller,
-  Get,
-  Param,
-  UseInterceptors,
-} from '@nestjs/common';
+import { Controller, Get, Param } from '@nestjs/common';
 import { DataAutocompleteService } from '../../services/data-autocomplete/data-autocomplete.service';
-import { Page } from '@gonetone/hoyowiki-api/dist/interfaces/EntryPageDataNpcAPIInterface';
+import { ICharacterCreate } from '../../../character/interfaces/common.interface';
 
 @Controller('data-autocomplete')
 export class DataAutocompleteController {
@@ -14,7 +8,7 @@ export class DataAutocompleteController {
 
   // @UseInterceptors(ClassSerializerInterceptor)
   @Get(':id')
-  getCharacters(@Param('id') id: string): Promise<Page> {
+  getCharacters(@Param('id') id: string): Promise<ICharacterCreate> {
     return this.dataAutocompleteService.getCharacterById(id);
   }
 }
