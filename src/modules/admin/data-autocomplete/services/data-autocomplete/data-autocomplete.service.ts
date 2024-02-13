@@ -3,9 +3,8 @@ import { Entry, Language, setLanguage } from '@gonetone/hoyowiki-api';
 import {
   Component,
   Module,
-  Page,
-  type Page as NpcPage
-} from "@gonetone/hoyowiki-api/dist/interfaces/EntryPageDataNpcAPIInterface";
+  type Page as NpcPage,
+} from '@gonetone/hoyowiki-api/dist/interfaces/EntryPageDataNpcAPIInterface';
 import { ICharacterCreate } from '../../../character/interfaces/common.interface';
 import { $Enums } from '.prisma/client';
 import type { Page as CharacterPage } from '@gonetone/hoyowiki-api/dist/interfaces/EntryPageDataCharacterAPIInterface';
@@ -16,7 +15,8 @@ import type { Page as MaterialPage } from '@gonetone/hoyowiki-api/dist/interface
 import type { Page as AnimalPage } from '@gonetone/hoyowiki-api/dist/interfaces/EntryPageDataAnimalAPIInterface';
 import type { Page as BookPage } from '@gonetone/hoyowiki-api/dist/interfaces/EntryPageDataBookAPIInterface';
 import type { Page as TutorialPage } from '@gonetone/hoyowiki-api/dist/interfaces/EntryPageDataTutorialAPIInterface';
-import * as cheerio from "cheerio";
+import * as cheerio from 'cheerio';
+import { GoogleTranslateService } from '../../../../../core/services/google-translate/google-translate.service';
 
 export type TEntry =
   | CharacterPage
@@ -33,6 +33,8 @@ export type TEntry =
 export class DataAutocompleteService {
   private readonly entryApi: Entry = new Entry();
 
+  constructor(private readonly translateService: GoogleTranslateService) {}
+
   public async getCharacterById(id: string): Promise<ICharacterCreate> {
     await setLanguage(Language.EnglishUS);
     const characterEn: TEntry = await this.entryApi.get(+id);
@@ -43,35 +45,74 @@ export class DataAutocompleteService {
     return this.transform(characterEn, characterRu);
   }
 
-  private transform(pageEn: TEntry, pageRu: TEntry): ICharacterCreate {
+  private async transform(
+    pageEn: TEntry,
+    pageRu: TEntry,
+  ): Promise<ICharacterCreate> {
     return {
       nameEn: pageEn.name,
-      nameUa: '',
+      nameUa: await this.translateService.translateText(pageRu.name, 'uk'),
       nameRu: pageRu.name,
-      quality: $Enums.Quality.EPIC,
-      elementalType: $Enums.Element.ANEMO,
-      region: $Enums.Region.FONTAINE,
-      bonusAttribute: $Enums.BonusAttribute.ANEMO_DMG_BONUS,
-      weapon: $Enums.WeaponType.SWORD,
-      constellationEn: this.extractConstellationHtml(pageEn, 'Constellation'),
-      constellationUa: '',
-      constellationRu: this.extractConstellationHtml(pageRu, 'Созвездие:'),
+      quality:
+        (pageEn as CharacterPage).filter_values.character_rarity.values[0] ===
+        '5-Star'
+          ? $Enums.Quality.LEGENDARY
+          : (pageEn as CharacterPage).filter_values.character_rarity
+              .values[0] === '4-Star'
+          ? $Enums.Quality.EPIC
+          : $Enums.Quality.OTHER,
+      elementalType: (
+        pageEn as CharacterPage
+      ).filter_values.character_vision.values[0].toUpperCase() as $Enums.Element,
+      region: (pageEn as CharacterPage).filter_values.character_region.values[0]
+        .split(' ')[0]
+        .toUpperCase() as $Enums.Region,
+      bonusAttribute: (
+        pageEn as CharacterPage
+      ).filter_values.character_property.values[0]
+        .toUpperCase()
+        .replace(/ /g, '_') as $Enums.BonusAttribute,
+      weapon: (
+        pageEn as CharacterPage
+      ).filter_values.character_weapon.values[0].toUpperCase() as $Enums.WeaponType,
+      constellationEn: this.getCharacterInfo(pageEn, [
+        'Constellation',
+        'Constellation:',
+      ]),
+      constellationUa: await this.translateService.translateText(
+        this.getCharacterInfo(pageRu, ['Созвездие', 'Созвездие:']),
+        'uk',
+      ),
+      constellationRu: this.getCharacterInfo(pageRu, [
+        'Созвездие',
+        'Созвездие:',
+      ]),
       arche: [],
-      birthday: new Date(),
-      titleEn: '',
-      titleUa: '',
-      titleRu: '',
-      affiliationEn: '',
-      affiliationUa: '',
-      affiliationRu: '',
+      birthday: this.getBirthday(
+        this.getCharacterInfo(pageEn, ['Birthday', 'Birthday:']),
+      ),
+      titleEn: this.getCharacterInfo(pageEn, ['Title', 'Title:']),
+      titleUa: await this.translateService.translateText(
+        this.getCharacterInfo(pageRu, ['Титул', 'Титул:']),
+        'uk',
+      ),
+      titleRu: this.getCharacterInfo(pageRu, ['Титул', 'Титул:']),
+      affiliationEn: this.getCharacterInfo(pageEn, [
+        'Affiliation',
+        'Affiliation:',
+      ]),
+      affiliationUa: await this.translateService.translateText(
+        this.getCharacterInfo(pageRu, ['Группа', 'Группа:']),
+        'uk',
+      ),
+      affiliationRu: this.getCharacterInfo(pageRu, ['Группа', 'Группа:']),
       icon: pageEn.icon_url,
-      splashArt: '',
-      cardIcon: '',
+      splashArt: this.getCharacterPictures(pageEn).splashArt,
+      cardIcon: this.getCharacterPictures(pageEn).cardIcon,
     };
   }
 
-
-  private extractConstellationHtml(characters: TEntry, key: string): string {
+  private getCharacterInfo(characters: TEntry, keys: string[]): string {
     const attributesModule: Module | undefined = characters.modules.find(
       (module) => module.id === '1',
     );
@@ -82,12 +123,36 @@ export class DataAutocompleteService {
     const constellationData: string | undefined = baseInfoComponent?.data;
     const value: string | undefined = JSON.parse(
       constellationData || '',
-    ).list.find((item) => item.key === key)?.value[0];
+    ).list.find((item: { key: string }) => keys.includes(item.key))?.value[0];
     return this.extractTextFromHtml(value || '');
   }
 
   private extractTextFromHtml(html: string): string {
     const $ = cheerio.load(html);
-    return $('p').text().trim();
+    const text = $('p').text().trim();
+    return text || html.trim();
+  }
+
+  private getCharacterPictures(character: TEntry): {
+    splashArt: string;
+    cardIcon: string;
+  } {
+    const pictures = JSON.parse(
+      character.modules
+        .find((module) => module.id === '3')
+        .components.find(
+          (component) => component.component_id === 'gallery_character',
+        ).data,
+    );
+    return {
+      splashArt: pictures.list[0].img || '',
+      cardIcon: pictures.pic || '',
+    };
+  }
+
+  private getBirthday(date: string): Date {
+    const [month, day]: string[] = date.split('/');
+
+    return new Date(Date.UTC(0, parseInt(month) - 1, parseInt(day)));
   }
 }
