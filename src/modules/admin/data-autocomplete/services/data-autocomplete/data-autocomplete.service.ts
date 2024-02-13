@@ -51,46 +51,21 @@ export class DataAutocompleteService {
   ): Promise<ICharacterCreate> {
     return {
       nameEn: pageEn.name,
-      nameUa: await this.translateService.translateText(pageRu.name, 'uk'),
+      nameUa: await this.translateNameUa(pageRu),
       nameRu: pageRu.name,
-      quality:
-        (pageEn as CharacterPage).filter_values.character_rarity.values[0] ===
-        '5-Star'
-          ? $Enums.Quality.LEGENDARY
-          : (pageEn as CharacterPage).filter_values.character_rarity
-              .values[0] === '4-Star'
-          ? $Enums.Quality.EPIC
-          : $Enums.Quality.OTHER,
-      elementalType: (
-        pageEn as CharacterPage
-      ).filter_values.character_vision.values[0].toUpperCase() as $Enums.Element,
-      region: (pageEn as CharacterPage).filter_values.character_region.values[0]
-        .split(' ')[0]
-        .toUpperCase() as $Enums.Region,
-      bonusAttribute: (
-        pageEn as CharacterPage
-      ).filter_values.character_property.values[0]
-        .toUpperCase()
-        .replace(/ /g, '_') as $Enums.BonusAttribute,
-      weapon: (
-        pageEn as CharacterPage
-      ).filter_values.character_weapon.values[0].toUpperCase() as $Enums.WeaponType,
-      constellationEn: this.getCharacterInfo(pageEn, [
-        'Constellation',
-        'Constellation:',
-      ]),
+      quality: this.getQuality(pageEn),
+      elementalType: this.getElementalType(pageEn),
+      region: this.getRegion(pageEn),
+      bonusAttribute: this.getBonusAttribute(pageEn),
+      weapon: this.getWeapon(pageEn),
+      constellationEn: this.getCharacterInfo(pageEn, ['Constellation', 'Constellation:']),
       constellationUa: await this.translateService.translateText(
         this.getCharacterInfo(pageRu, ['Созвездие', 'Созвездие:']),
         'uk',
       ),
-      constellationRu: this.getCharacterInfo(pageRu, [
-        'Созвездие',
-        'Созвездие:',
-      ]),
+      constellationRu: this.getCharacterInfo(pageRu, ['Созвездие', 'Созвездие:']),
       arche: [],
-      birthday: this.getBirthday(
-        this.getCharacterInfo(pageEn, ['Birthday', 'Birthday:']),
-      ),
+      birthday: this.getBirthday(this.getCharacterInfo(pageEn, ['Birthday', 'Birthday:']),),
       titleEn: this.getCharacterInfo(pageEn, ['Title', 'Title:']),
       titleUa: await this.translateService.translateText(
         this.getCharacterInfo(pageRu, ['Титул', 'Титул:']),
@@ -148,6 +123,44 @@ export class DataAutocompleteService {
       splashArt: pictures.list[0].img || '',
       cardIcon: pictures.pic || '',
     };
+  }
+
+  private async translateNameUa(page: TEntry): Promise<string> {
+    return await this.translateService.translateText(page.name, 'uk');
+  }
+
+  private getQuality(page: TEntry): $Enums.Quality {
+    return (page as CharacterPage).filter_values.character_rarity.values[0] ===
+      '5-Star'
+      ? $Enums.Quality.LEGENDARY
+      : (page as CharacterPage).filter_values.character_rarity.values[0] ===
+        '4-Star'
+      ? $Enums.Quality.EPIC
+      : $Enums.Quality.OTHER;
+  }
+
+  private getElementalType(page: TEntry): $Enums.Element {
+    return (
+      page as CharacterPage
+    ).filter_values.character_vision.values[0].toUpperCase() as $Enums.Element;
+  }
+
+  private getRegion(page: TEntry): $Enums.Region {
+    return (page as CharacterPage).filter_values.character_region.values[0]
+      .split(' ')[0]
+      .toUpperCase() as $Enums.Region;
+  }
+
+  private getBonusAttribute(page: TEntry): $Enums.BonusAttribute {
+    return (page as CharacterPage).filter_values.character_property.values[0]
+      .toUpperCase()
+      .replace(/ /g, '_') as $Enums.BonusAttribute;
+  }
+
+  private getWeapon(page: TEntry): $Enums.WeaponType {
+    return (
+      page as CharacterPage
+    ).filter_values.character_weapon.values[0].toUpperCase() as $Enums.WeaponType;
   }
 
   private getBirthday(date: string): Date {
