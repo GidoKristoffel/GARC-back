@@ -16,6 +16,7 @@ import type { Page as AnimalPage } from '@gonetone/hoyowiki-api/dist/interfaces/
 import type { Page as BookPage } from '@gonetone/hoyowiki-api/dist/interfaces/EntryPageDataBookAPIInterface';
 import type { Page as TutorialPage } from '@gonetone/hoyowiki-api/dist/interfaces/EntryPageDataTutorialAPIInterface';
 import * as cheerio from 'cheerio';
+import { GoogleTranslateService } from '../../../../../core/services/google-translate/google-translate.service';
 
 export type TEntry =
   | CharacterPage
@@ -32,6 +33,8 @@ export type TEntry =
 export class DataAutocompleteService {
   private readonly entryApi: Entry = new Entry();
 
+  constructor(private readonly translateService: GoogleTranslateService) {}
+
   public async getCharacterById(id: string): Promise<ICharacterCreate> {
     await setLanguage(Language.EnglishUS);
     const characterEn: TEntry = await this.entryApi.get(+id);
@@ -42,10 +45,13 @@ export class DataAutocompleteService {
     return this.transform(characterEn, characterRu);
   }
 
-  private transform(pageEn: TEntry, pageRu: TEntry): ICharacterCreate {
+  private async transform(
+    pageEn: TEntry,
+    pageRu: TEntry,
+  ): Promise<ICharacterCreate> {
     return {
       nameEn: pageEn.name,
-      nameUa: '',
+      nameUa: await this.translateService.translateText(pageRu.name, 'uk'),
       nameRu: pageRu.name,
       quality:
         (pageEn as CharacterPage).filter_values.character_rarity.values[0] ===
@@ -73,7 +79,10 @@ export class DataAutocompleteService {
         'Constellation',
         'Constellation:',
       ]),
-      constellationUa: '',
+      constellationUa: await this.translateService.translateText(
+        this.getCharacterInfo(pageRu, ['Созвездие', 'Созвездие:']),
+        'uk',
+      ),
       constellationRu: this.getCharacterInfo(pageRu, [
         'Созвездие',
         'Созвездие:',
@@ -83,13 +92,19 @@ export class DataAutocompleteService {
         this.getCharacterInfo(pageEn, ['Birthday', 'Birthday:']),
       ),
       titleEn: this.getCharacterInfo(pageEn, ['Title', 'Title:']),
-      titleUa: '',
+      titleUa: await this.translateService.translateText(
+        this.getCharacterInfo(pageRu, ['Титул', 'Титул:']),
+        'uk',
+      ),
       titleRu: this.getCharacterInfo(pageRu, ['Титул', 'Титул:']),
       affiliationEn: this.getCharacterInfo(pageEn, [
         'Affiliation',
         'Affiliation:',
       ]),
-      affiliationUa: '',
+      affiliationUa: await this.translateService.translateText(
+        this.getCharacterInfo(pageRu, ['Группа', 'Группа:']),
+        'uk',
+      ),
       affiliationRu: this.getCharacterInfo(pageRu, ['Группа', 'Группа:']),
       icon: pageEn.icon_url,
       splashArt: this.getCharacterPictures(pageEn).splashArt,

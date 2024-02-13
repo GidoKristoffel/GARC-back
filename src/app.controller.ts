@@ -1,4 +1,4 @@
-import { Controller, Get, OnModuleInit } from "@nestjs/common";
+import { Controller, Get, OnModuleInit } from '@nestjs/common';
 import { AppService } from './app.service';
 import { SuperUserService } from './core/services/super-user/super-user.service';
 
