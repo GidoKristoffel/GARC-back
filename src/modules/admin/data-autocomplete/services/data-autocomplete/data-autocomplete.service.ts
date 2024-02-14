@@ -60,25 +60,14 @@ export class DataAutocompleteService {
       weapon: this.getWeapon(pageEn),
       constellationEn: this.getCharacterInfo(pageEn, ['Constellation', 'Constellation:',]),
       constellationUa: await this.getConstellationUa(pageRu),
-      constellationRu: this.getCharacterInfo(pageRu, ['Созвездие', 'Созвездие:']),
+      constellationRu: this.getCharacterInfo(pageRu, ['Созвездие', 'Созвездие:',]),
       arche: [],
-      birthday: this.getBirthday(
-        this.getCharacterInfo(pageEn, ['Birthday', 'Birthday:']),
-      ),
+      birthday: this.getBirthday(this.getCharacterInfo(pageEn, ['Birthday', 'Birthday:']),),
       titleEn: this.getCharacterInfo(pageEn, ['Title', 'Title:']),
-      titleUa: await this.translateService.translateText(
-        this.getCharacterInfo(pageRu, ['Титул', 'Титул:']),
-        'uk',
-      ),
+      titleUa: await this.getTitleUa(pageRu),
       titleRu: this.getCharacterInfo(pageRu, ['Титул', 'Титул:']),
-      affiliationEn: this.getCharacterInfo(pageEn, [
-        'Affiliation',
-        'Affiliation:',
-      ]),
-      affiliationUa: await this.translateService.translateText(
-        this.getCharacterInfo(pageRu, ['Группа', 'Группа:']),
-        'uk',
-      ),
+      affiliationEn: this.getCharacterInfo(pageEn, ['Affiliation', 'Affiliation:',]),
+      affiliationUa: await this.getAffiliationUa(pageRu),
       affiliationRu: this.getCharacterInfo(pageRu, ['Группа', 'Группа:']),
       icon: pageEn.icon_url,
       splashArt: this.getCharacterPictures(pageEn).splashArt,
@@ -165,6 +154,20 @@ export class DataAutocompleteService {
   private async getConstellationUa(page: TEntry): Promise<string> {
     return await this.translateService.translateText(
       this.getCharacterInfo(page, ['Созвездие', 'Созвездие:']),
+      'uk',
+    );
+  }
+
+  private async getAffiliationUa(page: TEntry): Promise<string> {
+    return this.translateService.translateText(
+      this.getCharacterInfo(page, ['Группа', 'Группа:']),
+      'uk',
+    );
+  }
+
+  private async getTitleUa(page: TEntry): Promise<string> {
+    return this.translateService.translateText(
+      this.getCharacterInfo(page, ['Титул', 'Титул:']),
       'uk',
     );
   }
