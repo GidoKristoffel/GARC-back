@@ -58,14 +58,13 @@ export class DataAutocompleteService {
       region: this.getRegion(pageEn),
       bonusAttribute: this.getBonusAttribute(pageEn),
       weapon: this.getWeapon(pageEn),
-      constellationEn: this.getCharacterInfo(pageEn, ['Constellation', 'Constellation:']),
-      constellationUa: await this.translateService.translateText(
-        this.getCharacterInfo(pageRu, ['Созвездие', 'Созвездие:']),
-        'uk',
-      ),
+      constellationEn: this.getCharacterInfo(pageEn, ['Constellation', 'Constellation:',]),
+      constellationUa: await this.getConstellationUa(pageRu),
       constellationRu: this.getCharacterInfo(pageRu, ['Созвездие', 'Созвездие:']),
       arche: [],
-      birthday: this.getBirthday(this.getCharacterInfo(pageEn, ['Birthday', 'Birthday:']),),
+      birthday: this.getBirthday(
+        this.getCharacterInfo(pageEn, ['Birthday', 'Birthday:']),
+      ),
       titleEn: this.getCharacterInfo(pageEn, ['Title', 'Title:']),
       titleUa: await this.translateService.translateText(
         this.getCharacterInfo(pageRu, ['Титул', 'Титул:']),
@@ -161,6 +160,13 @@ export class DataAutocompleteService {
     return (
       page as CharacterPage
     ).filter_values.character_weapon.values[0].toUpperCase() as $Enums.WeaponType;
+  }
+
+  private async getConstellationUa(page: TEntry): Promise<string> {
+    return await this.translateService.translateText(
+      this.getCharacterInfo(page, ['Созвездие', 'Созвездие:']),
+      'uk',
+    );
   }
 
   private getBirthday(date: string): Date {
