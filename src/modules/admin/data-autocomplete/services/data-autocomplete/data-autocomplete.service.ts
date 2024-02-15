@@ -58,24 +58,24 @@ export class DataAutocompleteService {
       region: this.getRegion(pageEn),
       bonusAttribute: this.getBonusAttribute(pageEn),
       weapon: this.getWeapon(pageEn),
-      constellationEn: this.getCharacterInfo(pageEn, ['Constellation', 'Constellation:',]),
+      constellationEn: this.getCharacterInfo(pageEn, 'Constellation'),
       constellationUa: await this.getConstellationUa(pageRu),
-      constellationRu: this.getCharacterInfo(pageRu, ['Созвездие', 'Созвездие:',]),
+      constellationRu: this.getCharacterInfo(pageRu, 'Созвездие'),
       arche: [],
-      birthday: this.getBirthday(this.getCharacterInfo(pageEn, ['Birthday', 'Birthday:']),),
-      titleEn: this.getCharacterInfo(pageEn, ['Title', 'Title:']),
+      birthday: this.getBirthday(this.getCharacterInfo(pageEn, 'Birthday')),
+      titleEn: this.getCharacterInfo(pageEn, 'Title'),
       titleUa: await this.getTitleUa(pageRu),
-      titleRu: this.getCharacterInfo(pageRu, ['Титул', 'Титул:']),
-      affiliationEn: this.getCharacterInfo(pageEn, ['Affiliation', 'Affiliation:',]),
+      titleRu: this.getCharacterInfo(pageRu, 'Титул'),
+      affiliationEn: this.getCharacterInfo(pageEn, 'Affiliation'),
       affiliationUa: await this.getAffiliationUa(pageRu),
-      affiliationRu: this.getCharacterInfo(pageRu, ['Группа', 'Группа:']),
+      affiliationRu: this.getCharacterInfo(pageRu, 'Группа'),
       icon: pageEn.icon_url,
       splashArt: this.getCharacterPictures(pageEn).splashArt,
       cardIcon: this.getCharacterPictures(pageEn).cardIcon,
     };
   }
 
-  private getCharacterInfo(characters: TEntry, keys: string[]): string {
+  private getCharacterInfo(characters: TEntry, key: string): string {
     const attributesModule: Module | undefined = characters.modules.find(
       (module) => module.id === '1',
     );
@@ -86,7 +86,10 @@ export class DataAutocompleteService {
     const constellationData: string | undefined = baseInfoComponent?.data;
     const value: string | undefined = JSON.parse(
       constellationData || '',
-    ).list.find((item: { key: string }) => keys.includes(item.key))?.value[0];
+    ).list.find(
+      (item: { key: string }): boolean =>
+        (item.key.endsWith(':') ? item.key.slice(0, -1) : item.key) === key,
+    )?.value[0];
     return this.extractTextFromHtml(value || '');
   }
 
