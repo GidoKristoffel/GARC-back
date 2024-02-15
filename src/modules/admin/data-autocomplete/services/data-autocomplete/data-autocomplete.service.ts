@@ -117,7 +117,7 @@ export class DataAutocompleteService {
   }
 
   private async translateNameUa(page: TEntry): Promise<string> {
-    return await this.translateService.translateText(page.name, 'uk');
+    return await this.translateService.translateText(page.name, 'ru', 'uk');
   }
 
   private getQuality(page: TEntry): $Enums.Quality {
@@ -156,21 +156,24 @@ export class DataAutocompleteService {
 
   private async getConstellationUa(page: TEntry): Promise<string> {
     return await this.translateService.translateText(
-      this.getCharacterInfo(page, ['Созвездие', 'Созвездие:']),
+      this.getCharacterInfo(page, 'Созвездие'),
+      'ru',
       'uk',
     );
   }
 
   private async getAffiliationUa(page: TEntry): Promise<string> {
     return this.translateService.translateText(
-      this.getCharacterInfo(page, ['Группа', 'Группа:']),
+      this.getCharacterInfo(page, 'Группа'),
+      'ru',
       'uk',
     );
   }
 
   private async getTitleUa(page: TEntry): Promise<string> {
     return this.translateService.translateText(
-      this.getCharacterInfo(page, ['Титул', 'Титул:']),
+      this.getCharacterInfo(page, 'Титул'),
+      'ru',
       'uk',
     );
   }
