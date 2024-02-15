@@ -1,15 +1,22 @@
 import { Injectable } from '@nestjs/common';
-import { Translate } from '@google-cloud/translate/build/src/v2';
+import { GoogleTranslator } from '@translate-tools/core/esm/translators/GoogleTranslator';
+
+// // eslint-disable-next-line @typescript-eslint/no-var-requires
+// const translate = require('google-translate-api');
+
 @Injectable()
 export class GoogleTranslateService {
-  private readonly translate: Translate;
+  private readonly translator = new GoogleTranslator();
 
-  constructor() {
-    this.translate = new Translate();
-  }
-
-  async translateText(text: string, targetLanguage: string): Promise<string> {
-    const [translation] = await this.translate.translate(text, targetLanguage);
-    return translation || '';
+  async translateText(text: string, from: string, to: string): Promise<string> {
+    console.log('text: ', text);
+    console.log('from: ', from);
+    console.log('to: ', to);
+    console.log('----------------------------');
+    return (
+      this.translator
+        .translate(text, from, to)
+        .then((translate: string) => translate) || ''
+    );
   }
 }
