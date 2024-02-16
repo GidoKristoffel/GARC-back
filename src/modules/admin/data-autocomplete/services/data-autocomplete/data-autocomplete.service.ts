@@ -117,17 +117,12 @@ export class DataAutocompleteService {
   }
 
   private async translateNameUa(page: TEntry): Promise<string> {
-    return await this.translateService.translateText(page.name, 'ru', 'uk');
+    return await this.translateService.get(page.name, 'ru', 'uk');
   }
 
   private getQuality(page: TEntry): $Enums.Quality {
-    return (page as CharacterPage).filter_values.character_rarity.values[0] ===
-      '5-Star'
-      ? $Enums.Quality.LEGENDARY
-      : (page as CharacterPage).filter_values.character_rarity.values[0] ===
-        '4-Star'
-      ? $Enums.Quality.EPIC
-      : $Enums.Quality.OTHER;
+    const rarity: string = (page as CharacterPage).filter_values.character_rarity.values[0];
+    return rarity === '5-Star' ? $Enums.Quality.LEGENDARY : rarity === '4-Star' ? $Enums.Quality.EPIC : $Enums.Quality.OTHER;
   }
 
   private getElementalType(page: TEntry): $Enums.Element {
@@ -155,32 +150,22 @@ export class DataAutocompleteService {
   }
 
   private async getConstellationUa(page: TEntry): Promise<string> {
-    return await this.translateService.translateText(
-      this.getCharacterInfo(page, 'Созвездие'),
-      'ru',
-      'uk',
-    );
+    const text: string = this.getCharacterInfo(page, 'Созвездие');
+    return await this.translateService.get(text, 'ru', 'uk');
   }
 
   private async getAffiliationUa(page: TEntry): Promise<string> {
-    return this.translateService.translateText(
-      this.getCharacterInfo(page, 'Группа'),
-      'ru',
-      'uk',
-    );
+    const text: string = this.getCharacterInfo(page, 'Группа');
+    return this.translateService.get(text, 'ru', 'uk');
   }
 
   private async getTitleUa(page: TEntry): Promise<string> {
-    return this.translateService.translateText(
-      this.getCharacterInfo(page, 'Титул'),
-      'ru',
-      'uk',
-    );
+    const text: string = this.getCharacterInfo(page, 'Титул');
+    return this.translateService.get(text, 'ru', 'uk');
   }
 
   private getBirthday(date: string): Date {
     const [month, day]: string[] = date.split('/');
-
     return new Date(Date.UTC(0, parseInt(month) - 1, parseInt(day)));
   }
 }

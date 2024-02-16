@@ -3,9 +3,9 @@ import { GoogleTranslator } from '@translate-tools/core/translators/GoogleTransl
 
 @Injectable()
 export class GoogleTranslateService {
-  private readonly translator = new GoogleTranslator();
+  private readonly translator: GoogleTranslator = new GoogleTranslator();
 
-  async translateText(text: string, from: string, to: string): Promise<string> {
+  async get(text: string, from: string, to: string): Promise<string> {
     return (
       this.translator
         .translate(text, from, to)
