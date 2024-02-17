@@ -61,7 +61,7 @@ export class DataAutocompleteService {
       constellationEn: this.getCharacterInfo(pageEn, 'Constellation'),
       constellationUa: await this.getConstellationUa(pageRu),
       constellationRu: this.getCharacterInfo(pageRu, 'Созвездие'),
-      arche: [],
+      arche: this.getArche(pageRu),
       birthday: this.getBirthday(this.getCharacterInfo(pageEn, 'Birthday')),
       titleEn: this.getCharacterInfo(pageEn, 'Title'),
       titleUa: await this.getTitleUa(pageRu),
@@ -203,6 +203,22 @@ export class DataAutocompleteService {
   private getBirthday(date: string): Date {
     const [month, day]: string[] = date.split('/');
     return new Date(Date.UTC(0, parseInt(month) - 1, parseInt(day)));
+  }
+
+  private getArche(page: TEntry): $Enums.Arche[] {
+    const arche: string = this.getCharacterInfo(page, 'Архэ');
+
+    const result: $Enums.Arche[] = [];
+
+    if (arche.includes('Усия')) {
+      result.push($Enums.Arche.OUSIA);
+    }
+
+    if (arche.includes('Пневма')) {
+      result.push($Enums.Arche.PNEUMA);
+    }
+
+    return result;
   }
 
   private extractTextFromHtml(html: string): string {

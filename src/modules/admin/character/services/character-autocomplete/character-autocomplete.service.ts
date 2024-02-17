@@ -12,7 +12,7 @@ export class CharacterAutocompleteService {
   private readonly entryApi: Entry = new Entry();
 
   public async get(id: string): Promise<any> {
-    await setLanguage(Language.EnglishUS);
+    await setLanguage(Language.Russian);
     const character: Promise<any> = this.entryApi
       .get(+id)
       .then((characters: Page) => {
