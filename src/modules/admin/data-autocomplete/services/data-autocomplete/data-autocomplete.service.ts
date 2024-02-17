@@ -51,7 +51,7 @@ export class DataAutocompleteService {
   ): Promise<ICharacterCreate> {
     return {
       nameEn: pageEn.name,
-      nameUa: await this.translateNameUa(pageRu),
+      nameUa: await this.getNameUa(pageRu),
       nameRu: pageRu.name,
       quality: this.getQuality(pageEn),
       elementalType: this.getElementalType(pageEn),
@@ -76,53 +76,75 @@ export class DataAutocompleteService {
   }
 
   private getCharacterInfo(characters: TEntry, key: string): string {
-    const attributesModule: Module | undefined = characters.modules.find(
-      (module) => module.id === '1',
+    const attributesModule: Module = characters.modules.find(
+      (module: Module): boolean => module.id === '1',
     );
-    const baseInfoComponent: Component | undefined =
-      attributesModule?.components.find(
-        (component) => component.component_id === 'baseInfo',
-      );
-    const constellationData: string | undefined = baseInfoComponent?.data;
-    const value: string | undefined = JSON.parse(
-      constellationData || '',
-    ).list.find(
-      (item: { key: string }): boolean =>
-        (item.key.endsWith(':') ? item.key.slice(0, -1) : item.key) === key,
-    )?.value[0];
-    return this.extractTextFromHtml(value || '');
-  }
 
-  private extractTextFromHtml(html: string): string {
-    const $ = cheerio.load(html);
-    const text = $('p').text().trim();
-    return text || html.trim();
+    if (!attributesModule) {
+      return '';
+    }
+
+    const baseInfoComponent: Component = attributesModule.components.find(
+      (component: Component): boolean => component.component_id === 'baseInfo',
+    );
+
+    if (!baseInfoComponent || !baseInfoComponent.data) {
+      return '';
+    }
+
+    const parsedData = JSON.parse(baseInfoComponent.data);
+    const value = parsedData.list.find(
+      (item: { key: string }): boolean => item.key.replace(/:$/, '') === key,
+    )?.value[0];
+
+    if (!value) {
+      return '';
+    }
+
+    return this.extractTextFromHtml(value);
   }
 
   private getCharacterPictures(character: TEntry): {
     splashArt: string;
     cardIcon: string;
   } {
-    const pictures = JSON.parse(
-      character.modules
-        .find((module) => module.id === '3')
-        .components.find(
-          (component) => component.component_id === 'gallery_character',
-        ).data,
+    const galleryModule: Module = character.modules.find(
+      (module: Module): boolean => module.id === '3',
     );
-    return {
-      splashArt: pictures.list[0].img || '',
-      cardIcon: pictures.pic || '',
-    };
-  }
 
-  private async translateNameUa(page: TEntry): Promise<string> {
-    return await this.translateService.get(page.name, 'ru', 'uk');
+    if (!galleryModule || !galleryModule.components.length) {
+      return { splashArt: '', cardIcon: '' };
+    }
+
+    const galleryComponent: Component = galleryModule.components.find(
+      (component: Component): boolean =>
+        component.component_id === 'gallery_character',
+    );
+
+    if (!galleryComponent || !galleryComponent.data) {
+      return { splashArt: '', cardIcon: '' };
+    }
+
+    const pictures = JSON.parse(galleryComponent.data);
+
+    const splashArt = pictures.list[0]?.img || '';
+    const cardIcon = pictures.pic || '';
+
+    return { splashArt, cardIcon };
   }
 
   private getQuality(page: TEntry): $Enums.Quality {
-    const rarity: string = (page as CharacterPage).filter_values.character_rarity.values[0];
-    return rarity === '5-Star' ? $Enums.Quality.LEGENDARY : rarity === '4-Star' ? $Enums.Quality.EPIC : $Enums.Quality.OTHER;
+    const rarity: string = (page as CharacterPage).filter_values
+      .character_rarity.values[0];
+
+    switch (rarity) {
+      case '5-Star':
+        return $Enums.Quality.LEGENDARY;
+      case '4-Star':
+        return $Enums.Quality.EPIC;
+      default:
+        return $Enums.Quality.OTHER;
+    }
   }
 
   private getElementalType(page: TEntry): $Enums.Element {
@@ -149,6 +171,20 @@ export class DataAutocompleteService {
     ).filter_values.character_weapon.values[0].toUpperCase() as $Enums.WeaponType;
   }
 
+  private async getNameUa(page: TEntry): Promise<string> {
+    try {
+      const translatedName: string = await this.translateService.get(
+        page.name,
+        'ru',
+        'uk',
+      );
+      return translatedName || '';
+    } catch (error) {
+      console.error('Failed to translate name to Ukrainian:', error);
+      return '';
+    }
+  }
+
   private async getConstellationUa(page: TEntry): Promise<string> {
     const text: string = this.getCharacterInfo(page, 'Созвездие');
     return await this.translateService.get(text, 'ru', 'uk');
@@ -167,5 +203,11 @@ export class DataAutocompleteService {
   private getBirthday(date: string): Date {
     const [month, day]: string[] = date.split('/');
     return new Date(Date.UTC(0, parseInt(month) - 1, parseInt(day)));
+  }
+
+  private extractTextFromHtml(html: string): string {
+    const $: cheerio.CheerioAPI = cheerio.load(html);
+    const text: string = $('p').text().trim();
+    return text || html.trim();
   }
 }
