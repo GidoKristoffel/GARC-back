@@ -16,6 +16,7 @@ import { CharacterService } from '../../services/character/character.service';
 import { Character, UserCharacters } from '@prisma/client';
 import {
   IAllCharactersResponse,
+  IAutocompleteCharacterResponse,
   IAvailableCharacterResponse,
   ICharacterResponse,
   ICreatedCharacterResponse,
@@ -24,6 +25,7 @@ import {
 } from '../../interfaces/response.interface';
 import {
   ICharacter,
+  ICharacterCreate,
   IDeletedCharacter,
 } from '../../interfaces/common.interface';
 import { CharacterDto } from '../../dto';
@@ -115,7 +117,14 @@ export class CharacterController {
 
   @UseInterceptors(ClassSerializerInterceptor)
   @Get('data-autocomplete/:id')
-  async getDataForAutocomplete(@Param('id') id: string): Promise<any> {
-    return this.characterAutocompleteService.getCharacterById(id);
+  async getDataForAutocomplete(
+    @Param('id') id: string,
+  ): Promise<IAutocompleteCharacterResponse> {
+    const character: ICharacterCreate =
+      await this.characterAutocompleteService.getCharacterById(id);
+    return {
+      character,
+      status: character ? HttpStatus.OK : HttpStatus.BAD_REQUEST,
+    };
   }
 }
