@@ -6,10 +6,15 @@ import {
 import { Entry, Language, setLanguage } from '@gonetone/hoyowiki-api';
 import * as cheerio from 'cheerio';
 import { GoogleTranslateService } from '../../../../../core/services/google-translate/google-translate.service';
-import { ICharacterCreate } from '../../interfaces/common.interface';
-import { $Enums } from '.prisma/client';
+import { IAutocompleteCharacter } from '../../interfaces/common.interface';
 import type { Page as CharacterPage } from '@gonetone/hoyowiki-api/dist/interfaces/EntryPageDataCharacterAPIInterface';
 import { TEntry } from '../../../data-autocomplete/services/data-autocomplete/data-autocomplete.service';
+import { EQuality } from '../../enums/quality.enum';
+import { EElement } from '../../enums/element.enum';
+import { ERegion } from '../../enums/region.enum';
+import { EArche } from '../../enums/arche.enum';
+import { EBonusAttribute } from '../../enums/bonus-attribute.enum';
+import { EWeapon } from '../../enums/weapon.enum';
 
 @Injectable()
 export class CharacterAutocompleteService {
@@ -17,7 +22,7 @@ export class CharacterAutocompleteService {
 
   constructor(private readonly translateService: GoogleTranslateService) {}
 
-  public async getCharacterById(id: string): Promise<ICharacterCreate> {
+  public async getCharacterById(id: string): Promise<IAutocompleteCharacter> {
     await setLanguage(Language.EnglishUS);
     const characterEn: TEntry = await this.entryApi.get(+id);
 
@@ -30,7 +35,7 @@ export class CharacterAutocompleteService {
   private async transform(
     pageEn: TEntry,
     pageRu: TEntry,
-  ): Promise<ICharacterCreate> {
+  ): Promise<IAutocompleteCharacter> {
     return {
       nameEn: pageEn.name,
       nameUa: await this.getNameUa(pageRu),
@@ -115,42 +120,42 @@ export class CharacterAutocompleteService {
     return { splashArt, cardIcon };
   }
 
-  private getQuality(page: TEntry): $Enums.Quality {
+  private getQuality(page: TEntry): EQuality {
     const rarity: string = (page as CharacterPage).filter_values
       .character_rarity.values[0];
 
     switch (rarity) {
       case '5-Star':
-        return $Enums.Quality.LEGENDARY;
+        return EQuality.LEGENDARY;
       case '4-Star':
-        return $Enums.Quality.EPIC;
+        return EQuality.EPIC;
       default:
-        return $Enums.Quality.OTHER;
+        return EQuality.OTHER;
     }
   }
 
-  private getElementalType(page: TEntry): $Enums.Element {
+  private getElementalType(page: TEntry): EElement {
     return (
       page as CharacterPage
-    ).filter_values.character_vision.values[0].toUpperCase() as $Enums.Element;
+    ).filter_values.character_vision.values[0].toLowerCase() as EElement;
   }
 
-  private getRegion(page: TEntry): $Enums.Region {
+  private getRegion(page: TEntry): ERegion {
     return (page as CharacterPage).filter_values.character_region.values[0]
       .split(' ')[0]
-      .toUpperCase() as $Enums.Region;
+      .toLowerCase() as ERegion;
   }
 
-  private getBonusAttribute(page: TEntry): $Enums.BonusAttribute {
+  private getBonusAttribute(page: TEntry): EBonusAttribute {
     return (page as CharacterPage).filter_values.character_property.values[0]
-      .toUpperCase()
-      .replace(/ /g, '_') as $Enums.BonusAttribute;
+      .toLowerCase()
+      .replace(/ /g, '-') as EBonusAttribute;
   }
 
-  private getWeapon(page: TEntry): $Enums.WeaponType {
+  private getWeapon(page: TEntry): EWeapon {
     return (
       page as CharacterPage
-    ).filter_values.character_weapon.values[0].toUpperCase() as $Enums.WeaponType;
+    ).filter_values.character_weapon.values[0].toLowerCase() as EWeapon;
   }
 
   private async getNameUa(page: TEntry): Promise<string> {
@@ -187,17 +192,17 @@ export class CharacterAutocompleteService {
     return new Date(Date.UTC(0, parseInt(month) - 1, parseInt(day)));
   }
 
-  private getArche(page: TEntry): $Enums.Arche[] {
+  private getArche(page: TEntry): EArche[] {
     const arche: string = this.getCharacterInfo(page, 'Архэ');
 
-    const result: $Enums.Arche[] = [];
+    const result: EArche[] = [];
 
     if (arche.includes('Усия')) {
-      result.push($Enums.Arche.OUSIA);
+      result.push(EArche.OUSIA);
     }
 
     if (arche.includes('Пневма')) {
-      result.push($Enums.Arche.PNEUMA);
+      result.push(EArche.PNEUMA);
     }
 
     return result;
