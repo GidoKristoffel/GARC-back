@@ -68,3 +68,28 @@ export interface ICharacter {
   splashArt: string;
   cardIcon: string;
 }
+
+export interface IAutocompleteCharacter {
+  nameEn: string;
+  nameUa: string;
+  nameRu: string;
+  quality: EQuality;
+  elementalType: EElement;
+  region: ERegion;
+  bonusAttribute: EBonusAttribute;
+  weapon: EWeapon;
+  constellationEn: string;
+  constellationUa: string;
+  constellationRu: string;
+  arche: EArche[];
+  birthday: Date;
+  titleEn: string;
+  titleUa: string;
+  titleRu: string;
+  affiliationEn: string;
+  affiliationUa: string;
+  affiliationRu: string;
+  icon: string;
+  splashArt: string;
+  cardIcon: string;
+}

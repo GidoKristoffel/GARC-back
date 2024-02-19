@@ -1,6 +1,6 @@
 import { HttpStatus } from '@nestjs/common';
 import { Character, UserCharacters } from '@prisma/client';
-import { ICharacter, ICharacterCreate, IDeletedCharacter } from "./common.interface";
+import { IAutocompleteCharacter, ICharacter, ICharacterCreate, IDeletedCharacter } from "./common.interface";
 
 export interface ICharacterResponse {
   character: ICharacter | null;
@@ -33,6 +33,6 @@ export interface IDeletedCharactersResponse {
 }
 
 export interface IAutocompleteCharacterResponse {
-  character: ICharacterCreate | null;
+  character: IAutocompleteCharacter | null;
   status: HttpStatus.OK | HttpStatus.BAD_REQUEST;
 }
