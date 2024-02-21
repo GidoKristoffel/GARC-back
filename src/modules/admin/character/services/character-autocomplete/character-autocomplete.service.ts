@@ -153,27 +153,31 @@ export class CharacterAutocompleteService {
   }
 
   private getElementalType(page: TEntry): EElement {
-    return (
-      page as CharacterPage
-    ).filter_values.character_vision.values[0].toLowerCase() as EElement;
+    const elementalType: string =
+      (page as CharacterPage).filter_values.character_vision.values[0] ||
+      'Other';
+    return elementalType.toLowerCase() as EElement;
   }
 
   private getRegion(page: TEntry): ERegion {
-    return (page as CharacterPage).filter_values.character_region.values[0]
-      .split(' ')[0]
-      .toLowerCase() as ERegion;
+    const region: string =
+      (page as CharacterPage).filter_values.character_region.values[0] ||
+      'Other';
+    return region.split(' ')[0].toLowerCase() as ERegion;
   }
 
   private getBonusAttribute(page: TEntry): EBonusAttribute {
-    return (page as CharacterPage).filter_values.character_property.values[0]
-      .toLowerCase()
-      .replace(/ /g, '-') as EBonusAttribute;
+    const bonusAttribute: string =
+      (page as CharacterPage).filter_values.character_property.values[0] ||
+      'Other';
+    return bonusAttribute.toLowerCase().replace(/ /g, '-') as EBonusAttribute;
   }
 
   private getWeapon(page: TEntry): EWeapon {
-    return (
-      page as CharacterPage
-    ).filter_values.character_weapon.values[0].toLowerCase() as EWeapon;
+    const weapon: string =
+      (page as CharacterPage).filter_values.character_weapon.values[0] ||
+      'Other';
+    return weapon.toLowerCase() as EWeapon;
   }
 
   private async getNameUa(page: TEntry): Promise<string> {
