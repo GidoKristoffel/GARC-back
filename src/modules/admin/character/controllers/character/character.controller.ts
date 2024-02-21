@@ -26,9 +26,8 @@ import {
 import {
   IAutocompleteCharacter,
   ICharacter,
-  ICharacterCreate,
-  IDeletedCharacter
-} from "../../interfaces/common.interface";
+  IDeletedCharacter,
+} from '../../interfaces/common.interface';
 import { CharacterDto } from '../../dto';
 import { AvailableCharactersDto } from '../../dto/available-characters.dto';
 import { CharacterAutocompleteService } from '../../services/character-autocomplete/character-autocomplete.service';
