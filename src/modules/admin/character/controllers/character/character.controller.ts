@@ -24,10 +24,11 @@ import {
   IUpdatedCharacterResponse,
 } from '../../interfaces/response.interface';
 import {
+  IAutocompleteCharacter,
   ICharacter,
   ICharacterCreate,
-  IDeletedCharacter,
-} from '../../interfaces/common.interface';
+  IDeletedCharacter
+} from "../../interfaces/common.interface";
 import { CharacterDto } from '../../dto';
 import { AvailableCharactersDto } from '../../dto/available-characters.dto';
 import { CharacterAutocompleteService } from '../../services/character-autocomplete/character-autocomplete.service';
@@ -120,7 +121,7 @@ export class CharacterController {
   async getDataForAutocomplete(
     @Param('id') id: string,
   ): Promise<IAutocompleteCharacterResponse> {
-    const character: ICharacterCreate =
+    const character: IAutocompleteCharacter =
       await this.characterAutocompleteService.getCharacterById(id);
     return {
       character,
