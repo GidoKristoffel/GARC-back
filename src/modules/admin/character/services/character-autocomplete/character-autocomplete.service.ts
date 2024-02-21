@@ -2,19 +2,37 @@ import { Injectable } from '@nestjs/common';
 import {
   Component,
   Module,
+  type Page as NpcPage,
 } from '@gonetone/hoyowiki-api/dist/interfaces/EntryPageDataNpcAPIInterface';
 import { Entry, Language, setLanguage } from '@gonetone/hoyowiki-api';
 import * as cheerio from 'cheerio';
 import { GoogleTranslateService } from '../../../../../core/services/google-translate/google-translate.service';
 import { IAutocompleteCharacter } from '../../interfaces/common.interface';
 import type { Page as CharacterPage } from '@gonetone/hoyowiki-api/dist/interfaces/EntryPageDataCharacterAPIInterface';
-import { TEntry } from '../../../data-autocomplete/services/data-autocomplete/data-autocomplete.service';
 import { EQuality } from '../../enums/quality.enum';
 import { EElement } from '../../enums/element.enum';
 import { ERegion } from '../../enums/region.enum';
 import { EArche } from '../../enums/arche.enum';
 import { EBonusAttribute } from '../../enums/bonus-attribute.enum';
 import { EWeapon } from '../../enums/weapon.enum';
+import type { Page as WeaponPage } from '@gonetone/hoyowiki-api/dist/interfaces/EntryPageDataWeaponAPIInterface';
+import type { Page as ArtifactPage } from '@gonetone/hoyowiki-api/dist/interfaces/EntryPageDataArtifactAPIInterface';
+import type { Page as EnemyPage } from '@gonetone/hoyowiki-api/dist/interfaces/EntryPageDataEnemyAPIInterface';
+import type { Page as MaterialPage } from '@gonetone/hoyowiki-api/dist/interfaces/EntryPageDataMaterialAPIInterface';
+import type { Page as AnimalPage } from '@gonetone/hoyowiki-api/dist/interfaces/EntryPageDataAnimalAPIInterface';
+import type { Page as BookPage } from '@gonetone/hoyowiki-api/dist/interfaces/EntryPageDataBookAPIInterface';
+import type { Page as TutorialPage } from '@gonetone/hoyowiki-api/dist/interfaces/EntryPageDataTutorialAPIInterface';
+
+export type TEntry =
+  | CharacterPage
+  | WeaponPage
+  | ArtifactPage
+  | EnemyPage
+  | MaterialPage
+  | NpcPage
+  | AnimalPage
+  | BookPage
+  | TutorialPage;
 
 @Injectable()
 export class CharacterAutocompleteService {
