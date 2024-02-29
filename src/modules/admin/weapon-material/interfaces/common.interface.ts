@@ -2,7 +2,7 @@ import { EMaterialRarity } from '../../../../core/enums/material-rarity.enum';
 import { EDay } from '../../../../core/enums/day.enum';
 import { $Enums } from '.prisma/client';
 import { EWeaponMaterialType } from '../../../../core/enums/weapon-material-type.enum';
-import { ERegion } from '../../character/enums/region.enum';
+import { ERegion } from '../../../../core/enums/region.enum';
 
 export interface IWeaponMaterial {
   id: string;

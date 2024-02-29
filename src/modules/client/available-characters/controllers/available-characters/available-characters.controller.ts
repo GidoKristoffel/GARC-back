@@ -3,20 +3,32 @@ import {
   ClassSerializerInterceptor,
   Controller,
   Get,
+  HttpStatus,
   UseInterceptors,
 } from '@nestjs/common';
-import { IAvailableCharacter } from '../../interfaces/common.interface';
+import {
+  IAvailableCharacter,
+  IFullAvailableCharacter,
+  IFullAvailableCharacterResponse,
+} from '../../interfaces/common.interface';
 import { AvailableCharactersService } from '../../services/available-characters/available-characters.service';
 import { AvailableCharactersDto } from '../../dto';
 
-@Controller('available-characters')
+@Controller('client/available-characters')
 export class AvailableCharactersController {
   constructor(private availableCharactersService: AvailableCharactersService) {}
 
   @UseInterceptors(ClassSerializerInterceptor)
   @Get()
-  async getAvailableCharacters(userId: string): Promise<IAvailableCharacter[]> {
-    return this.availableCharactersService.getByUserId(userId);
+  async getAvailableCharacters(
+    userId: string,
+  ): Promise<IFullAvailableCharacterResponse> {
+    const availableCharacters: IFullAvailableCharacter[] | null =
+      await this.availableCharactersService.getByUserId(userId);
+    return {
+      availableCharacters,
+      status: availableCharacters ? HttpStatus.FOUND : HttpStatus.NOT_FOUND,
+    };
   }
 
   @UseInterceptors(ClassSerializerInterceptor)

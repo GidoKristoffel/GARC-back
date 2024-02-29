@@ -1,4 +1,4 @@
-export enum EBonusAttribute {
+export enum ECharacterBonusAttribute {
   CRIT_DMG = 'crit-dmg',
   ELEMENTAL_MASTERY = 'elemental-mastery',
   ENERGY_RECHARGE = 'energy-recharge',

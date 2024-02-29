@@ -6,12 +6,12 @@ import {
 } from '../../interfaces/common.interface';
 import { $Enums } from '.prisma/client';
 import { Character } from '@prisma/client';
-import { EArche } from '../../enums/arche.enum';
-import { EQuality } from '../../enums/quality.enum';
-import { EElement } from '../../enums/element.enum';
-import { ERegion } from '../../enums/region.enum';
-import { EBonusAttribute } from '../../enums/bonus-attribute.enum';
-import { EWeapon } from '../../enums/weapon.enum';
+import { EArche } from '../../../../../core/enums/arche.enum';
+import { EQuality } from '../../../../../core/enums/quality.enum';
+import { EElement } from '../../../../../core/enums/element.enum';
+import { ERegion } from '../../../../../core/enums/region.enum';
+import { ECharacterBonusAttribute } from '../../../../../core/enums/character-bonus-attribute.enum';
+import { EWeaponType } from '../../../../../core/enums/weapon-type.enum';
 
 @Injectable()
 export class TransformCharacterService {
@@ -61,8 +61,8 @@ export class TransformCharacterService {
       region: this.convertToKebabCase(data.region) as ERegion,
       bonusAttribute: this.convertToKebabCase(
         data.bonusAttribute,
-      ) as EBonusAttribute,
-      weapon: this.convertToKebabCase(data.weapon) as EWeapon,
+      ) as ECharacterBonusAttribute,
+      weapon: this.convertToKebabCase(data.weapon) as EWeaponType,
       constellation: {
         en: data.constellationEn,
         ua: data.constellationUa,

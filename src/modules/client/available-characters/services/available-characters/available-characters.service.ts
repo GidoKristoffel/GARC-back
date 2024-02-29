@@ -1,22 +1,47 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../../../shared/prisma/prisma.service';
-import { Prisma } from '@prisma/client';
-import { IAvailableCharacter } from '../../interfaces/common.interface';
+import { Character, Prisma } from '@prisma/client';
+import {
+  IAvailableCharacter,
+  IFullAvailableCharacter,
+} from '../../interfaces/common.interface';
+import { TransformAvailableCharactersService } from '../transform-available-characters/transform-available-characters.service';
+import { UserCharacters } from '.prisma/client';
 
 @Injectable()
 export class AvailableCharactersService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly transformAvailableCharacters: TransformAvailableCharactersService,
+  ) {}
 
   public async getByUserId(
     userId: string,
-  ): Promise<IAvailableCharacter[] | null> {
-    return this.prismaService.userCharacters
-      .findMany({
-        where: {
-          userId,
-        },
+  ): Promise<IFullAvailableCharacter[] | null> {
+    return this.prismaService.character
+      .findMany()
+      .then((characters: Character[]) => {
+        return this.prismaService.userCharacters
+          .findMany({
+            where: {
+              userId,
+            },
+          })
+          .then(
+            (
+              availableCharacters: UserCharacters[],
+            ): IFullAvailableCharacter[] => {
+              return characters.map((character: Character) =>
+                this.transformAvailableCharacters.transformToResponseFormat(
+                  character,
+                  availableCharacters,
+                ),
+              );
+            },
+          )
+          .catch(() => null);
       })
-      .catch(() => null);
+      .catch(() => []);
   }
 
   public async update(

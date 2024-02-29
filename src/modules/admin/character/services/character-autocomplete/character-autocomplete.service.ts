@@ -9,12 +9,11 @@ import * as cheerio from 'cheerio';
 import { GoogleTranslateService } from '../../../../../core/services/google-translate/google-translate.service';
 import { IAutocompleteCharacter } from '../../interfaces/common.interface';
 import type { Page as CharacterPage } from '@gonetone/hoyowiki-api/dist/interfaces/EntryPageDataCharacterAPIInterface';
-import { EQuality } from '../../enums/quality.enum';
-import { EElement } from '../../enums/element.enum';
-import { ERegion } from '../../enums/region.enum';
-import { EArche } from '../../enums/arche.enum';
-import { EBonusAttribute } from '../../enums/bonus-attribute.enum';
-import { EWeapon } from '../../enums/weapon.enum';
+import { EQuality } from '../../../../../core/enums/quality.enum';
+import { EElement } from '../../../../../core/enums/element.enum';
+import { ERegion } from '../../../../../core/enums/region.enum';
+import { EArche } from '../../../../../core/enums/arche.enum';
+import { ECharacterBonusAttribute } from '../../../../../core/enums/character-bonus-attribute.enum';
 import type { Page as WeaponPage } from '@gonetone/hoyowiki-api/dist/interfaces/EntryPageDataWeaponAPIInterface';
 import type { Page as ArtifactPage } from '@gonetone/hoyowiki-api/dist/interfaces/EntryPageDataArtifactAPIInterface';
 import type { Page as EnemyPage } from '@gonetone/hoyowiki-api/dist/interfaces/EntryPageDataEnemyAPIInterface';
@@ -22,6 +21,7 @@ import type { Page as MaterialPage } from '@gonetone/hoyowiki-api/dist/interface
 import type { Page as AnimalPage } from '@gonetone/hoyowiki-api/dist/interfaces/EntryPageDataAnimalAPIInterface';
 import type { Page as BookPage } from '@gonetone/hoyowiki-api/dist/interfaces/EntryPageDataBookAPIInterface';
 import type { Page as TutorialPage } from '@gonetone/hoyowiki-api/dist/interfaces/EntryPageDataTutorialAPIInterface';
+import { EWeaponType } from '../../../../../core/enums/weapon-type.enum';
 
 export type TEntry =
   | CharacterPage
@@ -166,18 +166,20 @@ export class CharacterAutocompleteService {
     return region.split(' ')[0].toLowerCase() as ERegion;
   }
 
-  private getBonusAttribute(page: TEntry): EBonusAttribute {
+  private getBonusAttribute(page: TEntry): ECharacterBonusAttribute {
     const bonusAttribute: string =
       (page as CharacterPage).filter_values.character_property.values[0] ||
       'Other';
-    return bonusAttribute.toLowerCase().replace(/ /g, '-') as EBonusAttribute;
+    return bonusAttribute
+      .toLowerCase()
+      .replace(/ /g, '-') as ECharacterBonusAttribute;
   }
 
-  private getWeapon(page: TEntry): EWeapon {
+  private getWeapon(page: TEntry): EWeaponType {
     const weapon: string =
       (page as CharacterPage).filter_values.character_weapon.values[0] ||
       'Other';
-    return weapon.toLowerCase() as EWeapon;
+    return weapon.toLowerCase() as EWeaponType;
   }
 
   private async getNameUa(page: TEntry): Promise<string> {
