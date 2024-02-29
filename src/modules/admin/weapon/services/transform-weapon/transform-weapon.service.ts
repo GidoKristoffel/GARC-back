@@ -6,7 +6,7 @@ import { EWeaponType } from '../../../../../core/enums/weapon-type.enum';
 import { EWeaponBonusAttribute } from '../../../../../core/enums/weapon-bonus-attribute.enum';
 import { EWeaponQuality } from '../../../../../core/enums/weapon-quality.enum';
 import { WeaponDto } from '../../dto';
-import { ERegion } from '../../../character/enums/region.enum';
+import { ERegion } from '../../../../../core/enums/region.enum';
 
 @Injectable()
 export class TransformWeaponService {

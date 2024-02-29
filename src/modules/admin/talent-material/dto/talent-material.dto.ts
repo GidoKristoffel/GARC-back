@@ -1,6 +1,6 @@
 import { ETalentMaterialType } from '../../../../core/enums/talent-material-type.enum';
 import { EMaterialRarity } from '../../../../core/enums/material-rarity.enum';
-import { ERegion } from '../../character/enums/region.enum';
+import { ERegion } from '../../../../core/enums/region.enum';
 import { EDay } from '../../../../core/enums/day.enum';
 
 export class TalentMaterialDto {

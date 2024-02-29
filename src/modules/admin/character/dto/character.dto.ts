@@ -1,10 +1,10 @@
 import { IsString } from 'class-validator';
-import { EQuality } from '../enums/quality.enum';
-import { EElement } from '../enums/element.enum';
-import { ERegion } from '../enums/region.enum';
-import { EBonusAttribute } from '../enums/bonus-attribute.enum';
-import { EWeapon } from '../enums/weapon.enum';
-import { EArche } from '../enums/arche.enum';
+import { EQuality } from '../../../../core/enums/quality.enum';
+import { EElement } from '../../../../core/enums/element.enum';
+import { ERegion } from '../../../../core/enums/region.enum';
+import { ECharacterBonusAttribute } from '../../../../core/enums/character-bonus-attribute.enum';
+import { EArche } from '../../../../core/enums/arche.enum';
+import { EWeaponType } from '../../../../core/enums/weapon-type.enum';
 
 export class CharacterDto {
   name: {
@@ -15,8 +15,8 @@ export class CharacterDto {
   quality: EQuality;
   elementalType: EElement;
   region: ERegion;
-  bonusAttribute: EBonusAttribute;
-  weapon: EWeapon;
+  bonusAttribute: ECharacterBonusAttribute;
+  weapon: EWeaponType;
   constellation: {
     en: string;
     ua: string;

@@ -1,10 +1,10 @@
 import { $Enums } from '.prisma/client';
-import { EQuality } from '../enums/quality.enum';
-import { ERegion } from '../enums/region.enum';
-import { EBonusAttribute } from '../enums/bonus-attribute.enum';
-import { EWeapon } from '../enums/weapon.enum';
-import { EArche } from '../enums/arche.enum';
-import { EElement } from '../enums/element.enum';
+import { EQuality } from '../../../../core/enums/quality.enum';
+import { ERegion } from '../../../../core/enums/region.enum';
+import { ECharacterBonusAttribute } from '../../../../core/enums/character-bonus-attribute.enum';
+import { EArche } from '../../../../core/enums/arche.enum';
+import { EElement } from '../../../../core/enums/element.enum';
+import { EWeaponType } from '../../../../core/enums/weapon-type.enum';
 
 export interface IDeletedCharacter {
   id: string;
@@ -45,8 +45,8 @@ export interface ICharacter {
   quality: EQuality;
   elementalType: EElement;
   region: ERegion;
-  bonusAttribute: EBonusAttribute;
-  weapon: EWeapon;
+  bonusAttribute: ECharacterBonusAttribute;
+  weapon: EWeaponType;
   constellation: {
     en: string;
     ua: string;
@@ -76,8 +76,8 @@ export interface IAutocompleteCharacter {
   quality: EQuality;
   elementalType: EElement;
   region: ERegion;
-  bonusAttribute: EBonusAttribute;
-  weapon: EWeapon;
+  bonusAttribute: ECharacterBonusAttribute;
+  weapon: EWeaponType;
   constellationEn: string;
   constellationUa: string;
   constellationRu: string;

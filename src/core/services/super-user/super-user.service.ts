@@ -17,8 +17,8 @@ export class SuperUserService {
   constructor(private readonly userService: UserService) {}
 
   public async init(): Promise<void> {
-    await this.initAdmin();
-    // await this.initClient();
+    // await this.initAdmin();
+    await this.initClient();
   }
 
   private async initAdmin(): Promise<void> {

@@ -9,7 +9,7 @@ import { EMaterialRarity } from '../../../../../core/enums/material-rarity.enum'
 import { EDay } from '../../../../../core/enums/day.enum';
 import { WeaponMaterialDto } from '../../dto';
 import { $Enums } from '.prisma/client';
-import { ERegion } from '../../../character/enums/region.enum';
+import { ERegion } from '../../../../../core/enums/region.enum';
 
 @Injectable()
 export class TransformWeaponMaterialService {
