@@ -215,7 +215,7 @@ model EnhancementMaterialMob {
   @@id([enhancementMaterialId, mobId])
 }
 
-model AartifactLevelingCategory {
+model ArtifactLevelingCategory {
   id     String @id @default(uuid())
   nameEn String @default("")
   nameUa String @default("")
