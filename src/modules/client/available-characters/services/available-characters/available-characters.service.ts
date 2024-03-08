@@ -48,7 +48,7 @@ export class AvailableCharactersService {
     userId: string,
     charactersToAdd: string[],
     charactersToRemove: string[],
-  ): Promise<void> {
+  ): Promise<IFullAvailableCharacter[]> {
     const operations: Promise<Prisma.BatchPayload>[] = [];
 
     if (charactersToAdd.length > 0) {
@@ -76,32 +76,7 @@ export class AvailableCharactersService {
     }
 
     await Promise.all(operations);
-  }
 
-  // public add(
-  //   userId: string,
-  //   characterIds: string[],
-  // ): Promise<Prisma.BatchPayload> {
-  //   return this.prismaService.userCharacters.createMany({
-  //     data: characterIds.map((characterId: string): IAvailableCharacter => {
-  //       return {
-  //         userId,
-  //         characterId,
-  //       };
-  //     }),
-  //     skipDuplicates: true,
-  //   });
-  // }
-  //
-  // public async remove(
-  //   userId: string,
-  //   characterIds: string[],
-  // ): Promise<Prisma.BatchPayload> {
-  //   return this.prismaService.userCharacters.deleteMany({
-  //     where: {
-  //       userId: userId,
-  //       characterId: { in: characterIds },
-  //     },
-  //   });
-  // }
+    return (await this.getByUserId(userId)) ?? null;
+  }
 }

@@ -4,15 +4,17 @@ import {
   Controller,
   Get,
   HttpStatus,
+  Post,
   UseInterceptors,
 } from '@nestjs/common';
 import {
-  IAvailableCharacter,
   IFullAvailableCharacter,
   IFullAvailableCharacterResponse,
 } from '../../interfaces/common.interface';
 import { AvailableCharactersService } from '../../services/available-characters/available-characters.service';
 import { AvailableCharactersDto } from '../../dto';
+import { CurrentUser } from '@common/decorators';
+import { User } from '@prisma/client';
 
 @Controller('client/available-characters')
 export class AvailableCharactersController {
@@ -32,14 +34,22 @@ export class AvailableCharactersController {
   }
 
   @UseInterceptors(ClassSerializerInterceptor)
-  @Get()
+  @Post()
   async updateAvailableCharacters(
+    @CurrentUser() user: User,
     @Body() dto: AvailableCharactersDto,
-  ): Promise<void> {
-    return await this.availableCharactersService.update(
-      dto.userId,
-      dto.charactersToAdd,
-      dto.charactersToRemove,
-    );
+  ): Promise<IFullAvailableCharacterResponse> {
+    console.log(user.id);
+    console.log(dto);
+    const availableCharacters: IFullAvailableCharacter[] | null =
+      await this.availableCharactersService.update(
+        user.id,
+        dto.charactersToAdd,
+        dto.charactersToRemove,
+      );
+    return {
+      availableCharacters,
+      status: availableCharacters ? HttpStatus.FOUND : HttpStatus.NOT_FOUND,
+    };
   }
 }

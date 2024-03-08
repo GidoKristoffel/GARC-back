@@ -215,6 +215,14 @@ model EnhancementMaterialMob {
   @@id([enhancementMaterialId, mobId])
 }
 
+model AartifactLevelingCategory {
+  id     String @id @default(uuid())
+  nameEn String @default("")
+  nameUa String @default("")
+  nameRu String @default("")
+  index  Int
+}
+
 enum Role {
   ADMIN
   USER
