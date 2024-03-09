@@ -11,16 +11,17 @@ datasource db {
 }
 
 model User {
-  id             String           @id @default(uuid())
-  email          String           @unique
-  username       String           @default("")
-  password       String?
-  provider       Provider?
-  createdAt      DateTime         @default(now()) @map("created_at")
-  updatedAt      DateTime         @updatedAt @map("updated_at")
-  roles          Role[]
-  Token          Token[]
-  UserCharacters UserCharacters[]
+  id                           String                         @id @default(uuid())
+  email                        String                         @unique
+  username                     String                         @default("")
+  password                     String?
+  provider                     Provider?
+  createdAt                    DateTime                       @default(now()) @map("created_at")
+  updatedAt                    DateTime                       @updatedAt @map("updated_at")
+  roles                        Role[]
+  Token                        Token[]
+  UserCharacters               UserCharacters[]
+  UserArtifactLevelingCategory UserArtifactLevelingCategory[]
 
   @@map("users")
 }
@@ -216,11 +217,21 @@ model EnhancementMaterialMob {
 }
 
 model ArtifactLevelingCategory {
-  id     String @id @default(uuid())
-  nameEn String @default("")
-  nameUa String @default("")
-  nameRu String @default("")
-  index  Int
+  id                           String                         @id @default(uuid())
+  nameEn                       String                         @default("")
+  nameUa                       String                         @default("")
+  nameRu                       String                         @default("")
+  index                        Int
+  UserArtifactLevelingCategory UserArtifactLevelingCategory[]
+}
+
+model UserArtifactLevelingCategory {
+  user                       User                     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId                     String
+  artifactLevelingCategory   ArtifactLevelingCategory @relation(fields: [artifactLevelingCategoryId], references: [id], onDelete: Cascade)
+  artifactLevelingCategoryId String
+
+  @@id([userId, artifactLevelingCategoryId])
 }
 
 enum Role {
