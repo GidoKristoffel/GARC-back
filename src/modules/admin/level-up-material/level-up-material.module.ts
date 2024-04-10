@@ -5,6 +5,6 @@ import { LevelUpMaterialController } from './controllers/level-up-material/level
 
 @Module({
   providers: [LevelUpMaterialService, TransformLevelUpMaterialService],
-  controllers: [LevelUpMaterialController]
+  controllers: [LevelUpMaterialController],
 })
 export class LevelUpMaterialModule {}

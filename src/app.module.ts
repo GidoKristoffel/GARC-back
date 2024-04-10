@@ -21,6 +21,7 @@ import { WeeklyBossModule } from './modules/admin/weekly-boss/weekly-boss.module
 import { AuthModule } from './modules/shared/auth/auth.module';
 import { JwtAuthGuard } from './modules/shared/auth/guards/jwt-auth.guard';
 import { AvailableCharactersModule } from './modules/client/available-characters/available-characters.module';
+import { ArtifactLevelingCategoryModule } from './modules/admin/artifact-leveling-category/artifact-leveling-category.module';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { AvailableCharactersModule } from './modules/client/available-characters
     EnhancementMaterialModule,
     WeaponModule,
     AvailableCharactersModule,
+    ArtifactLevelingCategoryModule,
   ],
   controllers: [AppController],
   providers: [
