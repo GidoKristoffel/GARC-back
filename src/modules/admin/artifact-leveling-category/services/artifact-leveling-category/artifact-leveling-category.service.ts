@@ -26,4 +26,18 @@ export class ArtifactLevelingCategoryService {
       )
       .catch(() => null);
   }
+
+  public async findAll(): Promise<IAscensionMaterial[] | null> {
+    return this.prismaService.artifactLevelingCategory
+      .findMany()
+      .then((artifactLevelingCategories: ArtifactLevelingCategory[]) => {
+        return artifactLevelingCategories.map(
+          (artifactLevelingCategory: ArtifactLevelingCategory) =>
+            this.transformArtifactLevelingCategoryService.transformToResponseFormat(
+              artifactLevelingCategory,
+            ),
+        );
+      })
+      .catch(() => null);
+  }
 }
