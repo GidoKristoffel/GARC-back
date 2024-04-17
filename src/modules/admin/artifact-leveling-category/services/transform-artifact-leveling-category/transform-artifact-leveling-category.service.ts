@@ -4,9 +4,6 @@ import {
   IArtifactLevelingCategory,
   IArtifactLevelingCategoryCreate,
 } from '../../interfaces/common.interface';
-import { AscensionMaterialDto } from '../../../ascension-material/dto';
-import { IAscensionMaterialCreate } from '../../../ascension-material/interfaces/common.interface';
-import { $Enums } from '.prisma/client';
 import { ArtifactLevelingCategoryDto } from '../../dto';
 
 @Injectable()
