@@ -56,4 +56,27 @@ export class ArtifactLevelingCategoryService {
       createdArtifactLevelingCategory,
     );
   }
+
+  public async update(
+    id: string,
+    artifactLevelingCategory: ArtifactLevelingCategoryDto,
+  ): Promise<IArtifactLevelingCategory | null> {
+    const updatedArtifactLevelingCategory: ArtifactLevelingCategory | null =
+      await this.prismaService.artifactLevelingCategory.update({
+        where: {
+          id,
+        },
+        data: this.transformArtifactLevelingCategoryService.transformToDBFormat(
+          artifactLevelingCategory,
+        ),
+      });
+
+    if (!updatedArtifactLevelingCategory) {
+      return null;
+    }
+
+    return this.transformArtifactLevelingCategoryService.transformToResponseFormat(
+      updatedArtifactLevelingCategory,
+    );
+  }
 }
