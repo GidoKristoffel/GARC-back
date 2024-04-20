@@ -1,11 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { IAscensionMaterial } from '../../../ascension-material/interfaces/common.interface';
-import { ArtifactLevelingCategory, AscensionMaterial } from "@prisma/client";
+import { ArtifactLevelingCategory } from '@prisma/client';
 import { PrismaService } from '../../../../shared/prisma/prisma.service';
 import { TransformArtifactLevelingCategoryService } from '../transform-artifact-leveling-category/transform-artifact-leveling-category.service';
 import { IArtifactLevelingCategory } from '../../interfaces/common.interface';
-import { AscensionMaterialDto } from "../../../ascension-material/dto";
-import { ArtifactLevelingCategoryDto } from "../../dto";
+import { ArtifactLevelingCategoryDto } from '../../dto';
 
 @Injectable()
 export class ArtifactLevelingCategoryService {
