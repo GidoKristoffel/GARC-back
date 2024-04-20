@@ -2,7 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { ArtifactLevelingCategory } from '@prisma/client';
 import { PrismaService } from '../../../../shared/prisma/prisma.service';
 import { TransformArtifactLevelingCategoryService } from '../transform-artifact-leveling-category/transform-artifact-leveling-category.service';
-import { IArtifactLevelingCategory } from '../../interfaces/common.interface';
+import {
+  IArtifactLevelingCategory,
+  IDeletedArtifactLevelingCategory,
+} from '../../interfaces/common.interface';
 import { ArtifactLevelingCategoryDto } from '../../dto';
 
 @Injectable()
@@ -76,5 +79,16 @@ export class ArtifactLevelingCategoryService {
     return this.transformArtifactLevelingCategoryService.transformToResponseFormat(
       updatedArtifactLevelingCategory,
     );
+  }
+
+  public async delete(id: string): Promise<IDeletedArtifactLevelingCategory> {
+    return this.prismaService.artifactLevelingCategory.delete({
+      where: {
+        id,
+      },
+      select: {
+        id: true,
+      },
+    });
   }
 }
