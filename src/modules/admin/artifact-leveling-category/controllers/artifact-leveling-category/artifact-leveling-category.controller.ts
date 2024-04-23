@@ -5,6 +5,7 @@ import {
   Get,
   HttpStatus,
   Param,
+  Patch,
   Post,
   UseInterceptors,
 } from '@nestjs/common';
@@ -13,14 +14,9 @@ import {
   IAllArtifactLevelingCategoryResponse,
   IArtifactLevelingCategoryResponse,
   ICreatedArtifactLevelingCategoryResponse,
+  IUpdatedArtifactLevelingCategoryResponse,
 } from '../../interfaces/response.interface';
 import { IArtifactLevelingCategory } from '../../interfaces/common.interface';
-import {
-  IAscensionMaterialResponse,
-  ICreatedAscensionMaterialResponse,
-} from '../../../ascension-material/interfaces/response.interface';
-import { IAscensionMaterial } from '../../../ascension-material/interfaces/common.interface';
-import { AscensionMaterialDto } from '../../../ascension-material/dto';
 import { ArtifactLevelingCategoryDto } from '../../dto';
 
 @Controller('artifact-leveling-category')
@@ -69,6 +65,20 @@ export class ArtifactLevelingCategoryController {
       status: artifactLevelingCategory
         ? HttpStatus.CREATED
         : HttpStatus.BAD_REQUEST,
+    };
+  }
+
+  @UseInterceptors(ClassSerializerInterceptor)
+  @Patch(':id')
+  async updateArtifactLevelingCategory(
+    @Param('id') id: string,
+    @Body() dto: ArtifactLevelingCategoryDto,
+  ): Promise<IUpdatedArtifactLevelingCategoryResponse> {
+    const artifactLevelingCategory: IArtifactLevelingCategory | null =
+      await this.artifactLevelingCategoryService.update(id, dto);
+    return {
+      artifactLevelingCategory,
+      status: artifactLevelingCategory ? HttpStatus.OK : HttpStatus.BAD_REQUEST,
     };
   }
 }
