@@ -1,23 +1,25 @@
 import {
   Body,
   ClassSerializerInterceptor,
-  Controller,
+  Controller, Delete,
   Get,
   HttpStatus,
-  Param,
+  Param, ParseUUIDPipe,
   Patch,
   Post,
-  UseInterceptors,
-} from '@nestjs/common';
+  UseInterceptors
+} from "@nestjs/common";
 import { ArtifactLevelingCategoryService } from '../../services/artifact-leveling-category/artifact-leveling-category.service';
 import {
   IAllArtifactLevelingCategoryResponse,
   IArtifactLevelingCategoryResponse,
-  ICreatedArtifactLevelingCategoryResponse,
-  IUpdatedArtifactLevelingCategoryResponse,
-} from '../../interfaces/response.interface';
+  ICreatedArtifactLevelingCategoryResponse, IDeletedArtifactLevelingCategoryResponse,
+  IUpdatedArtifactLevelingCategoryResponse
+} from "../../interfaces/response.interface";
 import { IArtifactLevelingCategory } from '../../interfaces/common.interface';
 import { ArtifactLevelingCategoryDto } from '../../dto';
+import { IDeletedAscensionMaterialResponse } from "../../../ascension-material/interfaces/response.interface";
+import { IDeletedAscensionMaterial } from "../../../ascension-material/interfaces/common.interface";
 
 @Controller('artifact-leveling-category')
 export class ArtifactLevelingCategoryController {
@@ -76,6 +78,19 @@ export class ArtifactLevelingCategoryController {
   ): Promise<IUpdatedArtifactLevelingCategoryResponse> {
     const artifactLevelingCategory: IArtifactLevelingCategory | null =
       await this.artifactLevelingCategoryService.update(id, dto);
+    return {
+      artifactLevelingCategory,
+      status: artifactLevelingCategory ? HttpStatus.OK : HttpStatus.BAD_REQUEST,
+    };
+  }
+
+  @UseInterceptors(ClassSerializerInterceptor)
+  @Delete(':id')
+  async deleteCharacter(
+    @Param('id', ParseUUIDPipe) id: string,
+  ): Promise<IDeletedArtifactLevelingCategoryResponse> {
+    const artifactLevelingCategory: IDeletedAscensionMaterial =
+      await this.artifactLevelingCategoryService.delete(id);
     return {
       artifactLevelingCategory,
       status: artifactLevelingCategory ? HttpStatus.OK : HttpStatus.BAD_REQUEST,
