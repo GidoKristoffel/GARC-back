@@ -1,25 +1,27 @@
 import {
   Body,
   ClassSerializerInterceptor,
-  Controller, Delete,
+  Controller,
+  Delete,
   Get,
   HttpStatus,
-  Param, ParseUUIDPipe,
+  Param,
+  ParseUUIDPipe,
   Patch,
   Post,
-  UseInterceptors
-} from "@nestjs/common";
+  UseInterceptors,
+} from '@nestjs/common';
 import { ArtifactLevelingCategoryService } from '../../services/artifact-leveling-category/artifact-leveling-category.service';
 import {
   IAllArtifactLevelingCategoryResponse,
   IArtifactLevelingCategoryResponse,
-  ICreatedArtifactLevelingCategoryResponse, IDeletedArtifactLevelingCategoryResponse,
-  IUpdatedArtifactLevelingCategoryResponse
-} from "../../interfaces/response.interface";
+  ICreatedArtifactLevelingCategoryResponse,
+  IDeletedArtifactLevelingCategoryResponse,
+  IUpdatedArtifactLevelingCategoryResponse,
+} from '../../interfaces/response.interface';
 import { IArtifactLevelingCategory } from '../../interfaces/common.interface';
 import { ArtifactLevelingCategoryDto } from '../../dto';
-import { IDeletedAscensionMaterialResponse } from "../../../ascension-material/interfaces/response.interface";
-import { IDeletedAscensionMaterial } from "../../../ascension-material/interfaces/common.interface";
+import { IDeletedAscensionMaterial } from '../../../ascension-material/interfaces/common.interface';
 
 @Controller('artifact-leveling-category')
 export class ArtifactLevelingCategoryController {
