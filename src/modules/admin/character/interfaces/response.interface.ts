@@ -1,6 +1,10 @@
 import { HttpStatus } from '@nestjs/common';
 import { Character, UserCharacters } from '@prisma/client';
-import { IAutocompleteCharacter, ICharacter, ICharacterCreate, IDeletedCharacter } from "./common.interface";
+import {
+  IAutocompleteCharacter,
+  ICharacter,
+  IDeletedCharacter,
+} from './common.interface';
 
 export interface ICharacterResponse {
   character: ICharacter | null;
