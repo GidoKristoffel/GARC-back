@@ -5,6 +5,9 @@ import { TransformArtifactLevelingCategoryService } from './services/transform-a
 
 @Module({
   controllers: [ArtifactLevelingCategoryController],
-  providers: [ArtifactLevelingCategoryService, TransformArtifactLevelingCategoryService]
+  providers: [
+    ArtifactLevelingCategoryService,
+    TransformArtifactLevelingCategoryService,
+  ],
 })
 export class ArtifactLevelingCategoryModule {}
